@@ -1,5 +1,12 @@
 [
   {
+    "version": "2.1.0",
+    "date": "2026-11-03",
+    "changes": [
+      "Added Neosoft non-downloader API proxy endpoints across AI, AI image, Pixiv, Search, Stalker, TextPro and Tools."
+    ]
+  },
+  {
     "version": "1.0.0",
     "date": "2025-01-01",
     "changes": [

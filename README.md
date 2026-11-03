@@ -6,6 +6,7 @@ A public, keyless API collection by **Teddy Tech**, with a refreshed documentati
 - **No API key required** for routes hosted by this project.
 - Searchable API directory with a live request tester and copyable endpoint URLs.
 - Existing media endpoints preserved.
+- Added Neosoft AI, AI image, Pixiv, search, public profile lookup, TextPro and utility endpoints (excluding its downloader category).
 - Added YouTube and AudioMack search/download routes plus a universal social-media downloader.
 - `GET /health` reports basic service health.
 - CORS enabled for browser integrations.
@@ -20,6 +21,30 @@ npm start
 ```
 
 The service listens on `PORT` or port `5000`. Open `/` for the documentation UI and `/endpoints` for the endpoint catalogue.
+
+## Added Neosoft endpoints
+
+The API exposes Neosoft's published non-downloader endpoints under their original paths. Examples:
+
+| Category | Route | Parameters |
+| --- | --- | --- |
+| AI | `/api/ai/ai-chat` | `text` |
+| AI | `/api/ai/gemini` | `text`, optional `sessionId` |
+| AI | `/api/ai/perplexity` | `text`, optional `mode` |
+| AI Image | `/api/ai-image/ailabs` | `prompt` (POST JSON) |
+| AI Image | `/api/ai-image/editimage` | `url`, `prompt` |
+| Pixiv | `/api/pixiv/search` | `q`, optional `limit` |
+| Pixiv | `/api/pixiv/detail` | `id` |
+| Search | `/api/search/youtube` | `q` |
+| Search | `/api/search/spotify` | `q` |
+| Search | `/api/search/pinterest` | `q` |
+| Stalker | `/api/stalker/tiktok` | `username` |
+| Stalker | `/api/stalker/roblox` | `username` or user ID |
+| TextPro | `/api/textpro/1163` | `text` |
+| Tools | `/api/tools/enhanceimage` | `url` |
+| Tools | `/api/tools/checker-ban-wa` | `number` |
+
+The full live list is available from `GET /endpoints`. The proxy checks Neosoft's public manifest and only forwards documented paths and allowed HTTP methods; it does not accept arbitrary destination URLs. Non-downloader endpoints are proxied without changing their response body or content type. Neosoft currently advertises a limit of 150 requests per IP per day, so upstream quota and availability still apply. File-upload forms from the upstream documentation are not forwarded as multipart uploads in this integration; use URL-based or JSON request variants where supported.
 
 ## Added media routes
 

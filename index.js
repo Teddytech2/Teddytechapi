@@ -110,6 +110,10 @@ logger.info('Starting server initialization...');
 logger.info('Loading API endpoints...');
 const allEndpoints = loadEndpointsFromDirectory('api');
 
+// Add Neosoft AI, image, search, Pixiv, profile and utility endpoints.
+// Requests are allow-listed against Neosoft's published manifest.
+require('./neosoftProxy').register(app, allEndpoints);
+
 // Additional public endpoints provided through the fixed CypherX media service.
 require('./cypherxProxy').register(app);
 allEndpoints.push({
