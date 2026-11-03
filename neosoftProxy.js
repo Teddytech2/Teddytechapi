@@ -4,165 +4,198 @@ const axios = require('axios');
 
 const BASE_URL = 'https://api.neosoft.best';
 const MANIFEST_URL = `${BASE_URL}/manifest`;
+const CACHE_MS = 60 * 1000;
 let manifestCache = null;
 let manifestLoadedAt = 0;
-const CACHE_MS = 5 * 60 * 1000;
+let manifestPromise = null;
 
-async function getManifest() {
-    if (manifestCache && Date.now() - manifestLoadedAt < CACHE_MS) return manifestCache;
-    const { data } = await axios.get(MANIFEST_URL, {
-        timeout: 15000,
-        headers: { 'User-Agent': 'TEDDY-TECH-API/2.2' }
-    });
-    if (!data || !Array.isArray(data.endpoints)) {
-        throw new Error('Neosoft manifest did not contain an endpoints array');
-    }
-    manifestCache = data;
-    manifestLoadedAt = Date.now();
-    return data;
+function isDownloader(endpoint) {
+    return String(endpoint?.category || '').trim().toLowerCase() === 'downloader';
 }
 
-function normalizePath(value) {
-    let path = String(value || '').trim();
-    if (!path.startsWith('/')) path = `/${path}`;
-    // Neosoft's public API routes include /api. Some manifest entries omit it.
-    if (!path.startsWith('/api/')) path = `/api${path}`;
-    return path.replace(/\/{2,}/g, '/').replace(/\/$/, '') || '/api';
-}
-
-function endpointMethods(endpoint) {
-    let methods = endpoint.methods || endpoint.method || endpoint.httpMethods || ['GET'];
-    if (!Array.isArray(methods)) methods = [methods];
-    return methods.map(method => String(method).toUpperCase());
+function normalizeMethods(endpoint) {
+    const raw = endpoint?.methods || endpoint?.method || ['GET'];
+    const list = Array.isArray(raw) ? raw : String(raw).split(/[|,\s]+/);
+    return [...new Set(list.map(method => String(method).toUpperCase()).filter(Boolean))];
 }
 
 function normalizeParams(params = {}) {
     if (Array.isArray(params)) {
         return params.map(item => {
-            if (typeof item === 'string') return { name: item, required: true };
+            if (typeof item === 'string') {
+                const name = item.replace(/^_/, '');
+                return { name, required: !item.startsWith('_') && name.toLowerCase() !== 'sessionid', description: '' };
+            }
             if (!item || typeof item !== 'object') return null;
             const name = item.name || item.key || item.param || item.parameter;
             if (!name) return null;
             const optional = item.optional === true || String(name).toLowerCase() === 'sessionid';
             return {
-                name: String(name),
+                name: String(name).replace(/^_/, ''),
                 required: item.required === undefined ? !optional : !!item.required,
                 description: item.description || item.desc || ''
             };
         }).filter(Boolean);
     }
     if (params && typeof params === 'object') {
-        return Object.entries(params).map(([name, detail]) => {
-            const optional = String(name).toLowerCase() === 'sessionid' || (detail && typeof detail === 'object' && detail.optional === true);
-            return {
-                name,
-                required: detail && typeof detail === 'object' && detail.required !== undefined
-                    ? !!detail.required
-                    : detail === false ? false : !optional,
-                description: detail && typeof detail === 'object' ? (detail.description || detail.desc || '') : ''
-            };
+        return Object.entries(params).map(([rawName, detail]) => {
+            const name = rawName.replace(/^_/, '');
+            const required = detail && typeof detail === 'object'
+                ? (detail.required === undefined ? detail.optional !== true && name.toLowerCase() !== 'sessionid' : !!detail.required)
+                : detail !== false && !rawName.startsWith('_') && name.toLowerCase() !== 'sessionid';
+            return { name, required, description: detail?.description || detail?.desc || '' };
         });
     }
     return [];
 }
 
-function sampleParams(params = {}) {
-    return normalizeParams(params)
-        .map(param => `${param.required ? param.name : '_' + param.name}=`)
-        .join('&');
+function normalizeEndpoint(endpoint) {
+    if (!endpoint || typeof endpoint !== 'object') return null;
+    const path = String(endpoint.path || endpoint.endpoint || '').trim();
+    if (!path.startsWith('/')) return null;
+    return {
+        name: endpoint.name || endpoint.title || path.split('/').filter(Boolean).pop() || path,
+        path,
+        category: endpoint.category || 'Neosoft',
+        description: endpoint.description || endpoint.desc || '',
+        methods: normalizeMethods(endpoint),
+        params: normalizeParams(endpoint.params || endpoint.parameters),
+        provider: 'Neosoft'
+    };
 }
 
-async function register(app, allEndpoints) {
-    // Proxy only to Neosoft's fixed origin. Preserve the complete /api/... path;
-    // the previous version accidentally stripped the /api prefix before matching.
+async function fetchManifest(force = false) {
+    if (!force && manifestCache && Date.now() - manifestLoadedAt < CACHE_MS) return manifestCache;
+    if (manifestPromise) return manifestPromise;
+    manifestPromise = (async () => {
+        const response = await axios.get(MANIFEST_URL, {
+            timeout: 20000,
+            headers: {
+                'User-Agent': 'TEDDY-TECH-API/3.0',
+                'Accept': 'application/json',
+                'Cache-Control': 'no-cache'
+            },
+            params: { _t: Date.now() }
+        });
+        const data = response.data;
+        if (!data || !Array.isArray(data.endpoints)) {
+            throw new Error('Neosoft manifest did not contain an endpoints array');
+        }
+        manifestCache = data;
+        manifestLoadedAt = Date.now();
+        return manifestCache;
+    })();
+    try {
+        return await manifestPromise;
+    } finally {
+        manifestPromise = null;
+    }
+}
+
+function toCatalogueGroups(manifest) {
+    const groups = new Map();
+    for (const raw of manifest.endpoints) {
+        if (isDownloader(raw)) continue;
+        const endpoint = normalizeEndpoint(raw);
+        if (!endpoint) continue;
+        const category = endpoint.category;
+        if (!groups.has(category)) groups.set(category, []);
+        const sample = endpoint.params.map(param => `${param.required ? '' : '_'}${encodeURIComponent(param.name)}=`).join('&');
+        const item = {
+            desc: endpoint.description,
+            path: endpoint.path + (sample ? `?${sample}` : ''),
+            params: endpoint.params,
+            methods: endpoint.methods,
+            provider: 'Neosoft'
+        };
+        groups.get(category).push({ [endpoint.name]: item });
+    }
+    return [...groups.entries()].map(([name, items]) => ({ name, items }));
+}
+
+function mergeCatalogue(localEndpoints, neosoftGroups) {
+    const result = localEndpoints.map(group => ({ name: group.name, items: [...group.items] }));
+    for (const group of neosoftGroups) {
+        const existing = result.find(item => item.name.toLowerCase() === group.name.toLowerCase());
+        if (existing) {
+            const known = new Set(existing.items.map(item => Object.keys(item)[0]));
+            existing.items.push(...group.items.filter(item => !known.has(Object.keys(item)[0])));
+        } else result.push(group);
+    }
+    return result;
+}
+
+function register(app, localEndpoints) {
+    // Register the proxy before the application's HTML 404 handler.
     app.all('/api/*', async (req, res) => {
         try {
-            const localPath = normalizePath(req.path);
-            let manifest;
-            let endpoint = null;
+            const manifest = await fetchManifest();
+            const requestedPath = req.path.replace(/\/+$/, '') || '/';
+            const endpoint = manifest.endpoints
+                .map(normalizeEndpoint)
+                .filter(Boolean)
+                .find(item => item.path.replace(/\/+$/, '') === requestedPath && item.methods.includes(req.method));
 
-            try {
-                manifest = await getManifest();
-                endpoint = manifest.endpoints.find(item => {
-                    const advertisedPath = normalizePath(item.path || item.endpoint || item.route);
-                    return advertisedPath === localPath && endpointMethods(item).includes(req.method.toUpperCase());
+            if (!endpoint || isDownloader(manifest.endpoints.find(item => normalizeEndpoint(item)?.path === endpoint.path))) {
+                return res.status(404).json({
+                    status: false,
+                    statusCode: 404,
+                    creator: 'Teddy Tech',
+                    message: 'Unknown Neosoft endpoint or unsupported HTTP method.',
+                    requested: { method: req.method, path: requestedPath }
                 });
-            } catch (manifestError) {
-                // Manifest downtime must not break documented Neosoft routes.
-                console.warn('[Neosoft proxy] Manifest lookup failed; forwarding fixed-origin path:', manifestError.message);
             }
-
-            // The hostname is fixed, and the path is restricted to /api/*.
-            // Forwarding the requested path also supports newly-added Neosoft
-            // endpoints before the manifest cache refreshes.
-            const upstreamPath = endpoint
-                ? (String(endpoint.path || endpoint.endpoint || endpoint.route).startsWith('/')
-                    ? String(endpoint.path || endpoint.endpoint || endpoint.route)
-                    : `/${String(endpoint.path || endpoint.endpoint || endpoint.route)}`)
-                : localPath;
 
             const upstream = await axios({
                 method: req.method,
-                url: `${BASE_URL}${normalizePath(upstreamPath)}`,
+                url: `${BASE_URL}${endpoint.path}`,
                 params: req.query,
-                data: ['POST', 'PUT', 'PATCH', 'DELETE'].includes(req.method.toUpperCase()) ? req.body : undefined,
+                data: ['POST', 'PUT', 'PATCH', 'DELETE'].includes(req.method) ? req.body : undefined,
                 timeout: 60000,
                 responseType: 'arraybuffer',
                 validateStatus: () => true,
                 headers: {
-                    'User-Agent': 'TEDDY-TECH-API/2.2',
+                    'User-Agent': 'TEDDY-TECH-API/3.0',
                     ...(req.headers['content-type'] ? { 'Content-Type': req.headers['content-type'] } : {})
                 },
                 maxContentLength: 25 * 1024 * 1024,
                 maxBodyLength: 25 * 1024 * 1024
             });
-
             res.status(upstream.status);
             res.setHeader('Content-Type', upstream.headers['content-type'] || 'application/json; charset=utf-8');
-            for (const header of ['cache-control', 'content-disposition', 'content-length']) {
+            for (const header of ['cache-control', 'content-disposition']) {
                 if (upstream.headers[header]) res.setHeader(header, upstream.headers[header]);
             }
             return res.send(Buffer.from(upstream.data));
         } catch (error) {
             console.error('[Neosoft proxy]', error.message);
-            return res.status(502).json({
-                status: false,
-                creator: 'Teddy Tech',
-                message: 'Neosoft upstream is temporarily unavailable.',
-                detail: process.env.NODE_ENV === 'development' ? error.message : undefined
-            });
+            // If a refresh fails, try the last known manifest before reporting an error.
+            if (manifestCache && !res.headersSent) {
+                return res.status(502).json({ status: false, creator: 'Teddy Tech', message: 'Neosoft upstream request failed.', detail: process.env.NODE_ENV === 'development' ? error.message : undefined });
+            }
+            return res.status(503).json({ status: false, creator: 'Teddy Tech', message: 'Neosoft manifest is temporarily unavailable.' });
         }
     });
 
-    // Build the public endpoint catalogue from Neosoft's manifest.
-    try {
-        const manifest = await getManifest();
-        const grouped = new Map();
-        for (const endpoint of manifest.endpoints) {
-            if (String(endpoint.category || '').toLowerCase() === 'downloader') continue;
-            const category = endpoint.category || 'Neosoft';
-            if (!grouped.has(category)) grouped.set(category, []);
-            const path = normalizePath(endpoint.path || endpoint.endpoint || endpoint.route);
-            const sample = sampleParams(endpoint.params || endpoint.parameters);
-            grouped.get(category).push({
-                [endpoint.name || endpoint.title || path]: {
-                    desc: endpoint.description || endpoint.desc || '',
-                    path: path + (sample ? '?' + sample : ''),
-                    params: normalizeParams(endpoint.params || endpoint.parameters),
-                    methods: endpointMethods(endpoint),
-                    provider: 'Neosoft'
-                }
-            });
+    // Warm the manifest in the background; never block server startup.
+    fetchManifest().catch(error => console.warn('[TEDDY-TECH API] Neosoft manifest unavailable at startup:', error.message));
+
+    return {
+        async getCatalogue() {
+            try {
+                const manifest = await fetchManifest();
+                return mergeCatalogue(localEndpoints, toCatalogueGroups(manifest));
+            } catch (error) {
+                console.warn('[TEDDY-TECH API] Using last available Neosoft catalogue:', error.message);
+                if (manifestCache) return mergeCatalogue(localEndpoints, toCatalogueGroups(manifestCache));
+                return mergeCatalogue(localEndpoints, []);
+            }
+        },
+        async refresh() {
+            const manifest = await fetchManifest(true);
+            return mergeCatalogue(localEndpoints, toCatalogueGroups(manifest));
         }
-        for (const [name, items] of grouped) {
-            const existing = allEndpoints.find(group => group.name === name);
-            if (existing) existing.items.push(...items);
-            else allEndpoints.push({ name, items });
-        }
-        console.log(`[TEDDY-TECH API] Added ${manifest.endpoints.filter(e => String(e.category || '').toLowerCase() !== 'downloader').length} Neosoft endpoints`);
-    } catch (error) {
-        console.warn('[TEDDY-TECH API] Could not load Neosoft endpoint manifest:', error.message);
-    }
+    };
 }
 
-module.exports = { register };
+module.exports = { register, fetchManifest, normalizeParams };

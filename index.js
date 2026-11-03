@@ -112,7 +112,7 @@ const allEndpoints = loadEndpointsFromDirectory('api');
 
 // Add Neosoft AI, image, search, Pixiv, profile and utility endpoints.
 // Requests are allow-listed against Neosoft's published manifest.
-require('./neosoftProxy').register(app, allEndpoints);
+const neosoftCatalogue = require('./neosoftProxy').register(app, allEndpoints);
 
 // Additional public endpoints provided through the fixed CypherX media service.
 require('./cypherxProxy').register(app);
@@ -133,12 +133,23 @@ allEndpoints.push({
 console.log('');
 logger.ready(`Loaded ${allEndpoints.reduce((n, c) => n + c.items.length, 0)} endpoints`);
 
-app.get('/endpoints', (req, res) => {
-    res.json({
-        status:    true,
-        count:     allEndpoints.reduce((n, c) => n + c.items.length, 0),
-        endpoints: allEndpoints
-    });
+app.get('/endpoints', async (req, res) => {
+    try {
+        // Refresh on demand with a short server-side TTL. ?refresh=1 bypasses it.
+        const catalogue = req.query.refresh === '1'
+            ? await neosoftCatalogue.refresh()
+            : await neosoftCatalogue.getCatalogue();
+        const count = catalogue.reduce((n, category) => n + category.items.length, 0);
+        res.set({
+            'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+            'Pragma': 'no-cache',
+            'Expires': '0'
+        });
+        res.json({ status: true, count, endpoints: catalogue, updatedAt: new Date().toISOString() });
+    } catch (error) {
+        logger.warn(`Endpoint catalogue refresh failed: ${error.message}`);
+        res.status(503).json({ status: false, message: 'Endpoint catalogue is temporarily unavailable.' });
+    }
 });
 
 app.get('/set', (req, res) => res.json({ status: true, ...set }));
