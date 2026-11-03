@@ -20,8 +20,41 @@ async function getManifest() {
     return data;
 }
 
+// Neosoft's manifest has used both object and array parameter descriptions.
+// Normalize them without assuming that every parameter is mandatory.
+function normalizeParams(params = {}) {
+    if (Array.isArray(params)) {
+        return params.map(item => {
+            if (typeof item === 'string') return { name: item, required: true };
+            if (!item || typeof item !== 'object') return null;
+            const name = item.name || item.key || item.param || item.parameter;
+            if (!name) return null;
+            return {
+                name: String(name),
+                required: item.required === undefined ? (item.optional !== true && String(name).toLowerCase() !== 'sessionid') : !!item.required,
+                description: item.description || item.desc || ''
+            };
+        }).filter(Boolean);
+    }
+    if (params && typeof params === 'object') {
+        return Object.entries(params).map(([name, detail]) => {
+            if (detail && typeof detail === 'object') {
+                return {
+                    name,
+                    required: detail.required === undefined ? (detail.optional !== true && String(name).toLowerCase() !== 'sessionid') : !!detail.required,
+                    description: detail.description || detail.desc || ''
+                };
+            }
+            return { name, required: detail !== false && String(name).toLowerCase() !== 'sessionid' };
+        });
+    }
+    return [];
+}
+
 function sampleParams(params = {}) {
-    return Object.keys(params).map(key => `${key}=`).join('&');
+    return normalizeParams(params)
+        .map(param => `${param.required ? param.name : '_' + param.name}=`)
+        .join('&');
 }
 
 async function register(app, allEndpoints) {
@@ -49,8 +82,8 @@ async function register(app, allEndpoints) {
             const config = {
                 method: req.method,
                 url: `${BASE_URL}${endpoint.path}`,
-                params: req.method === 'GET' ? req.query : undefined,
-                data: ['POST', 'PUT', 'PATCH'].includes(req.method) ? req.body : undefined,
+                params: req.query,
+                data: ['POST', 'PUT', 'PATCH', 'DELETE'].includes(req.method) ? req.body : undefined,
                 timeout: 60000,
                 responseType: 'arraybuffer',
                 validateStatus: () => true,
@@ -93,6 +126,7 @@ async function register(app, allEndpoints) {
                 [endpoint.name]: {
                     desc: endpoint.description || '',
                     path: endpoint.path + (sampleParams(endpoint.params) ? '?' + sampleParams(endpoint.params) : ''),
+                    params: normalizeParams(endpoint.params),
                     methods: endpoint.methods || [endpoint.method || 'GET'],
                     provider: 'Neosoft'
                 }

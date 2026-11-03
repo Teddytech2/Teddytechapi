@@ -405,14 +405,16 @@ document.addEventListener('DOMContentLoaded', async function () {
         const pathParamNames = Array.from(endpoint.matchAll(/\{([^}]+)\}/g), match => match[1]);
         const paramNames = [...new Set([...pathParamNames, ...queryParamNames])];
 
-        paramNames.forEach(paramName => {
-            const isOptional = paramName.startsWith('_');
+        paramNames.forEach(rawName => {
+            const isOptional = rawName.startsWith('_');
+            const paramName = isOptional ? rawName.slice(1) : rawName;
             const placeholderText = `Enter ${paramName}${isOptional ? ' (optional)' : ''}`;
             const paramField = document.createElement('div');
             paramField.className = 'mb-3';
             const input = document.createElement('input');
             input.type = 'text';
             input.id = `param-${paramName}`;
+            input.dataset.optional = String(isOptional);
             input.className = 'tkm-input w-full';
             input.placeholder = placeholderText;
             const error = document.createElement('div');
@@ -472,7 +474,7 @@ document.addEventListener('DOMContentLoaded', async function () {
                     const paramValue = input.value.trim();
                     const errorElement = document.getElementById(`error-${paramName}`);
                     
-                    if (!paramName.startsWith('_') && paramValue === '') {
+                    if (input.dataset.optional !== 'true' && paramValue === '') {
                         isValid = false;
                         errorElement.classList.remove('hidden');
                         input.classList.add('border-red-500');
@@ -500,7 +502,7 @@ document.addEventListener('DOMContentLoaded', async function () {
                         const paramName = input.id.replace('param-', '');
                         const paramValue = input.value;
                         
-                        if (paramName.startsWith('_') && paramValue === '') {
+                        if (input.dataset.optional === 'true' && paramValue === '') {
                             return;
                         }
                         
