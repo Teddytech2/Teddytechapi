@@ -171,7 +171,8 @@ const SHIZO_CONFIRMED_ROUTES = {
     "/downloader/youtube": "/downloader/youtube",
     "/downloader/twitter": "/downloader/twitter",
     "/downloader/tiktok": "/downloader/tiktok",
-    "/downloader/instagram": "/downloader/instagram"
+    "/downloader/instagram": "/downloader/instagram",
+    "/downloader/facebook": "/downloader/facebook"
 };
 
 function getShizoUpstreamCandidates(publicSuffix) {
@@ -190,6 +191,17 @@ function getShizoUpstreamCandidates(publicSuffix) {
         candidates.push(`/api${suffix}`);
     }
     return [...new Set(candidates)];
+}
+
+function suffixIsTikTok(requestPath) {
+    return /\/downloader\/tiktok\/?$/.test(requestPath || '');
+}
+
+function parseJsonBuffer(value) {
+    if (!value) return null;
+    if (typeof value === 'object' && !Buffer.isBuffer(value)) return value;
+    try { return JSON.parse(Buffer.isBuffer(value) ? value.toString('utf8') : String(value)); }
+    catch (_) { return null; }
 }
 
 async function handleTeddyProvider(req, res, upstreamCandidates) {
@@ -224,6 +236,72 @@ async function handleTeddyProvider(req, res, upstreamCandidates) {
             });
             // A 404 is the only response that triggers another route alias.
             if (upstream.status !== 404) break;
+        }
+
+        // Shizo's TikTok endpoint can return HTTP 200 with {status:false} and
+        // "Unknown error occurred." Treat that as a provider failure and try
+        // independent downloaders instead of passing a misleading 200 to users.
+        if (suffixIsTikTok(req.path)) {
+            const body = parseJsonBuffer(upstream?.data);
+            if (upstream && (upstream.status >= 500 || body?.status === false)) {
+                const videoUrl = originalQuery.url || originalQuery.link;
+                if (videoUrl) {
+                    // First fallback: the dedicated CypherX TikTok video route.
+                    try {
+                        const cypherx = await axios.get(
+                            `${require('./config').providers.cypherx.baseUrl}/download/tiktok/video`,
+                            { params: { url: videoUrl }, timeout: 45000, responseType: 'arraybuffer', validateStatus: () => true,
+                              headers: { 'User-Agent': 'TEDDY-TECH-API/4.0', 'Accept': 'application/json, */*' } }
+                        );
+                        const cypherxBody = parseJsonBuffer(cypherx.data);
+                        if (cypherx.status >= 200 && cypherx.status < 300 && cypherxBody?.status !== false) {
+                            upstream = cypherx;
+                        }
+                    } catch (fallbackError) {
+                        logger.warn(`CypherX TikTok fallback failed: ${fallbackError.message}`);
+                    }
+
+                    // Second fallback: TikWM, used by the legacy local TikTok
+                    // downloader. This keeps the public TEDDY route operational
+                    // even when Shizo's TikTok scraper is temporarily failing.
+                    if (parseJsonBuffer(upstream.data)?.status === false || upstream.status >= 500) {
+                        try {
+                            const tikwm = await axios.get('https://www.tikwm.com/api/', {
+                                params: { url: videoUrl, hd: 1 }, timeout: 30000,
+                                responseType: 'json', validateStatus: () => true,
+                                headers: {
+                                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/124.0.0.0 Safari/537.36',
+                                    'Referer': 'https://www.tikwm.com/'
+                                }
+                            });
+                            const data = tikwm.data?.data;
+                            if (tikwm.status >= 200 && tikwm.status < 300 && tikwm.data?.code === 0 && data) {
+                                upstream = {
+                                    status: 200,
+                                    headers: { 'content-type': 'application/json; charset=utf-8' },
+                                    data: Buffer.from(JSON.stringify({
+                                        status: true,
+                                        creator: 'Teddy Tech',
+                                        result: {
+                                            title: data.title || null,
+                                            duration: data.duration || null,
+                                            cover: data.cover || null,
+                                            no_watermark: data.play || null,
+                                            hd: data.hdplay || null,
+                                            watermark: data.wmplay || null,
+                                            music: data.music || null,
+                                            author: data.author ? { username: data.author.unique_id || null, nickname: data.author.nickname || null } : null,
+                                            stats: { plays: data.play_count || 0, likes: data.digg_count || 0, comments: data.comment_count || 0, shares: data.share_count || 0 }
+                                        }
+                                    }))
+                                };
+                            }
+                        } catch (fallbackError) {
+                            logger.warn(`TikWM TikTok fallback failed: ${fallbackError.message}`);
+                        }
+                    }
+                }
+            }
         }
         res.status(upstream.status);
         res.setHeader('Content-Type', upstream.headers['content-type'] || 'application/json; charset=utf-8');

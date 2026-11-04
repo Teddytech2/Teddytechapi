@@ -812,6 +812,15 @@ module.exports = [
           "methods": ["GET"], "provider": "TEDDY-TECH", "verified": true,
           "upstreamPath": "/downloader/instagram"
         }
+      },
+      {
+        "Facebook Downloader": {
+          "desc": "Download media from a public Facebook video or post URL.",
+          "path": "/api/teddyai/downloader/facebook?url=",
+          "params": [{"name": "url", "required": true, "description": "Paste the Facebook video or post URL"}],
+          "methods": ["GET"], "provider": "TEDDY-TECH", "verified": true,
+          "upstreamPath": "/downloader/facebook"
+        }
       }
     ]
   }
