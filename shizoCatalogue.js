@@ -26,7 +26,7 @@ module.exports = [
       },
       {
         "Dall E Imagine": {
-          "desc": "Confirmed Shizo upstream route. Input parameters have not been specified.",
+          "desc": "TEDDY Tools endpoint for meme search. Pass the search input required by the upstream service; the response is returned by the API.",
           "path": "/api/teddyai/ai/dall-e-imagine",
           "params": [],
           "methods": [
@@ -39,7 +39,7 @@ module.exports = [
       },
       {
         "AI Image Upscaler": {
-          "desc": "Confirmed Shizo upstream route. Input parameters have not been specified.",
+          "desc": "TEDDY Tools endpoint for meme search. Pass the search input required by the upstream service; the response is returned by the API.",
           "path": "/api/teddyai/ai/ai-image-upscaler",
           "params": [],
           "methods": [
@@ -52,7 +52,7 @@ module.exports = [
       },
       {
         "AI Image Enhancer": {
-          "desc": "Confirmed Shizo upstream route. Input parameters have not been specified.",
+          "desc": "TEDDY Tools endpoint for meme search. Pass the search input required by the upstream service; the response is returned by the API.",
           "path": "/api/teddyai/ai/ai-image-enhancer",
           "params": [],
           "methods": [
@@ -65,7 +65,7 @@ module.exports = [
       },
       {
         "AI Image Sharpener": {
-          "desc": "Confirmed Shizo upstream route. Input parameters have not been specified.",
+          "desc": "TEDDY Tools endpoint for meme search. Pass the search input required by the upstream service; the response is returned by the API.",
           "path": "/api/teddyai/ai/ai-image-sharpener",
           "params": [],
           "methods": [
@@ -179,7 +179,7 @@ module.exports = [
     "items": [
       {
         "Cards (premium)": {
-          "desc": "Confirmed Shizo upstream route. Input parameters have not been specified.",
+          "desc": "TEDDY Tools endpoint for meme search. Pass the search input required by the upstream service; the response is returned by the API.",
           "path": "/api/teddyai/games/cards-premium",
           "params": [],
           "methods": [
@@ -192,7 +192,7 @@ module.exports = [
       },
       {
         "Guess App Name": {
-          "desc": "Confirmed Shizo upstream route. Input parameters have not been specified.",
+          "desc": "TEDDY Tools endpoint for meme search. Pass the search input required by the upstream service; the response is returned by the API.",
           "path": "/api/teddyai/games/guess-app-name",
           "params": [],
           "methods": [
@@ -205,7 +205,7 @@ module.exports = [
       },
       {
         "Guess Song Lyrics": {
-          "desc": "Confirmed Shizo upstream route. Input parameters have not been specified.",
+          "desc": "TEDDY Tools endpoint for meme search. Pass the search input required by the upstream service; the response is returned by the API.",
           "path": "/api/teddyai/games/guess-song-lyrics",
           "params": [],
           "methods": [
@@ -218,7 +218,7 @@ module.exports = [
       },
       {
         "Guess The Words": {
-          "desc": "Confirmed Shizo upstream route. Input parameters have not been specified.",
+          "desc": "TEDDY Tools endpoint for meme search. Pass the search input required by the upstream service; the response is returned by the API.",
           "path": "/api/teddyai/games/guess-the-words",
           "params": [],
           "methods": [
@@ -231,7 +231,7 @@ module.exports = [
       },
       {
         "Emoji Riddles": {
-          "desc": "Confirmed Shizo upstream route. Input parameters have not been specified.",
+          "desc": "TEDDY Tools endpoint for meme search. Pass the search input required by the upstream service; the response is returned by the API.",
           "path": "/api/teddyai/games/emoji-riddles",
           "params": [],
           "methods": [
@@ -249,7 +249,7 @@ module.exports = [
     "items": [
       {
         "Annie": {
-          "desc": "Confirmed Shizo upstream route. Input parameters have not been specified.",
+          "desc": "TEDDY Tools endpoint for meme search. Pass the search input required by the upstream service; the response is returned by the API.",
           "path": "/api/teddyai/fanart/annie",
           "params": [],
           "methods": [
@@ -262,7 +262,7 @@ module.exports = [
       },
       {
         "Mikasa": {
-          "desc": "Confirmed Shizo upstream route. Input parameters have not been specified.",
+          "desc": "TEDDY Tools endpoint for meme search. Pass the search input required by the upstream service; the response is returned by the API.",
           "path": "/api/teddyai/fanart/mikasa",
           "params": [],
           "methods": [
@@ -275,7 +275,7 @@ module.exports = [
       },
       {
         "Nami": {
-          "desc": "Confirmed Shizo upstream route. Input parameters have not been specified.",
+          "desc": "TEDDY Tools endpoint for meme search. Pass the search input required by the upstream service; the response is returned by the API.",
           "path": "/api/teddyai/fanart/nami",
           "params": [],
           "methods": [
@@ -288,7 +288,7 @@ module.exports = [
       },
       {
         "Sakura": {
-          "desc": "Confirmed Shizo upstream route. Input parameters have not been specified.",
+          "desc": "TEDDY Tools endpoint for meme search. Pass the search input required by the upstream service; the response is returned by the API.",
           "path": "/api/teddyai/fanart/sakura",
           "params": [],
           "methods": [
@@ -301,7 +301,7 @@ module.exports = [
       },
       {
         "Sasha": {
-          "desc": "Confirmed Shizo upstream route. Input parameters have not been specified.",
+          "desc": "TEDDY Tools endpoint for meme search. Pass the search input required by the upstream service; the response is returned by the API.",
           "path": "/api/teddyai/fanart/sasha",
           "params": [],
           "methods": [
@@ -331,7 +331,7 @@ module.exports = [
     "items": [
       {
         "Husbu": {
-          "desc": "Confirmed Shizo upstream route. Input parameters have not been specified.",
+          "desc": "TEDDY Tools endpoint for meme search. Pass the search input required by the upstream service; the response is returned by the API.",
           "path": "/api/teddyai/sfw/husby",
           "params": [],
           "methods": [
@@ -344,7 +344,7 @@ module.exports = [
       },
       {
         "Loli": {
-          "desc": "Confirmed Shizo upstream route. Input parameters have not been specified.",
+          "desc": "TEDDY Tools endpoint for meme search. Pass the search input required by the upstream service; the response is returned by the API.",
           "path": "/api/teddyai/sfw/loli",
           "params": [],
           "methods": [
@@ -357,7 +357,7 @@ module.exports = [
       },
       {
         "Neko": {
-          "desc": "Confirmed Shizo upstream route. Input parameters have not been specified.",
+          "desc": "TEDDY Tools endpoint for meme search. Pass the search input required by the upstream service; the response is returned by the API.",
           "path": "/api/teddyai/sfw/neko",
           "params": [],
           "methods": [
@@ -370,7 +370,7 @@ module.exports = [
       },
       {
         "Shota": {
-          "desc": "Confirmed Shizo upstream route. Input parameters have not been specified.",
+          "desc": "TEDDY Tools endpoint for meme search. Pass the search input required by the upstream service; the response is returned by the API.",
           "path": "/api/teddyai/sfw/shota",
           "params": [],
           "methods": [
@@ -383,7 +383,7 @@ module.exports = [
       },
       {
         "Waifu": {
-          "desc": "Confirmed Shizo upstream route. Input parameters have not been specified.",
+          "desc": "TEDDY Tools endpoint for meme search. Pass the search input required by the upstream service; the response is returned by the API.",
           "path": "/api/teddyai/sfw/waifu",
           "params": [],
           "methods": [
@@ -436,9 +436,9 @@ module.exports = [
         }
       },
       {
-        "Japanese Pies": {
-          "desc": "Confirmed Shizo upstream route. Input parameters have not been specified.",
-          "path": "/api/teddyai/pies/japanese-pies",
+        "Japan Pies": {
+          "desc": "TEDDY Tools endpoint for meme search. Pass the search input required by the upstream service; the response is returned by the API.",
+          "path": "/api/teddyai/pies/japan",
           "params": [],
           "methods": [
             "GET"
@@ -449,9 +449,9 @@ module.exports = [
         }
       },
       {
-        "Korean Pies": {
-          "desc": "Confirmed Shizo upstream route. Input parameters have not been specified.",
-          "path": "/api/teddyai/pies/korean-pies",
+        "Korea Pies": {
+          "desc": "TEDDY Tools endpoint for meme search. Pass the search input required by the upstream service; the response is returned by the API.",
+          "path": "/api/teddyai/pies/korea",
           "params": [],
           "methods": [
             "GET"
@@ -462,9 +462,9 @@ module.exports = [
         }
       },
       {
-        "Malaysian Pies": {
-          "desc": "Confirmed Shizo upstream route. Input parameters have not been specified.",
-          "path": "/api/teddyai/pies/malaysian-pies",
+        "Malaysia Pies": {
+          "desc": "TEDDY Tools endpoint for meme search. Pass the search input required by the upstream service; the response is returned by the API.",
+          "path": "/api/teddyai/pies/malaysia",
           "params": [],
           "methods": [
             "GET"
@@ -476,8 +476,8 @@ module.exports = [
       },
       {
         "Thailand Pies": {
-          "desc": "Confirmed Shizo upstream route. Input parameters have not been specified.",
-          "path": "/api/teddyai/pies/thailand-pies",
+          "desc": "TEDDY Tools endpoint for meme search. Pass the search input required by the upstream service; the response is returned by the API.",
+          "path": "/api/teddyai/pies/thailand",
           "params": [],
           "methods": [
             "GET"
@@ -488,9 +488,9 @@ module.exports = [
         }
       },
       {
-        "Vietnamese Pies": {
-          "desc": "Confirmed Shizo upstream route. Input parameters have not been specified.",
-          "path": "/api/teddyai/pies/vietnamese-pies",
+        "Vietnam Pies": {
+          "desc": "TEDDY Tools endpoint for meme search. Pass the search input required by the upstream service; the response is returned by the API.",
+          "path": "/api/teddyai/pies/vietnam",
           "params": [],
           "methods": [
             "GET"
@@ -507,7 +507,7 @@ module.exports = [
     "items": [
       {
         "Motivational Quotes": {
-          "desc": "Confirmed Shizo upstream route. Input parameters have not been specified.",
+          "desc": "TEDDY Tools endpoint for meme search. Pass the search input required by the upstream service; the response is returned by the API.",
           "path": "/api/teddyai/quote/motivational-quotes",
           "params": [],
           "methods": [
@@ -532,7 +532,7 @@ module.exports = [
       },
       {
         "Dare (Task)": {
-          "desc": "Confirmed Shizo upstream route. Input parameters have not been specified.",
+          "desc": "TEDDY Tools endpoint for meme search. Pass the search input required by the upstream service; the response is returned by the API.",
           "path": "/api/teddyai/quote/dare-task",
           "params": [],
           "methods": [
@@ -545,7 +545,7 @@ module.exports = [
       },
       {
         "Flirts (English)": {
-          "desc": "Confirmed Shizo upstream route. Input parameters have not been specified.",
+          "desc": "TEDDY Tools endpoint for meme search. Pass the search input required by the upstream service; the response is returned by the API.",
           "path": "/api/teddyai/quote/flirts-english",
           "params": [],
           "methods": [
@@ -558,7 +558,7 @@ module.exports = [
       },
       {
         "Flirts (Hindi)": {
-          "desc": "Confirmed Shizo upstream route. Input parameters have not been specified.",
+          "desc": "TEDDY Tools endpoint for meme search. Pass the search input required by the upstream service; the response is returned by the API.",
           "path": "/api/teddyai/quote/flirts-hindi",
           "params": [],
           "methods": [
@@ -571,7 +571,7 @@ module.exports = [
       },
       {
         "Shayari (Hindi)": {
-          "desc": "Confirmed Shizo upstream route. Input parameters have not been specified.",
+          "desc": "TEDDY Tools endpoint for meme search. Pass the search input required by the upstream service; the response is returned by the API.",
           "path": "/api/teddyai/quote/shayari-hindi",
           "params": [],
           "methods": [
@@ -691,7 +691,7 @@ module.exports = [
       },
       {
         "Search Meme": {
-          "desc": "Confirmed Shizo upstream route. Input parameters have not been specified.",
+          "desc": "Search for memes using the upstream service. Supply its supported search parameters; the API returns the upstream result.",
           "path": "/api/teddyai/tools/search-meme",
           "params": [],
           "methods": [
@@ -704,7 +704,7 @@ module.exports = [
       },
       {
         "Forex Exchange": {
-          "desc": "Confirmed Shizo upstream route. Input parameters have not been specified.",
+          "desc": "Convert currencies using the upstream exchange service. Supply its supported currency and amount parameters.",
           "path": "/api/teddyai/tools/forex-exchange",
           "params": [],
           "methods": [
@@ -717,7 +717,7 @@ module.exports = [
       },
       {
         "IP Information": {
-          "desc": "Confirmed Shizo upstream route. Input parameters have not been specified.",
+          "desc": "Retrieve IP address information using the upstream service. Supply an IP address if required.",
           "path": "/api/teddyai/tools/ip-information",
           "params": [],
           "methods": [
@@ -730,7 +730,7 @@ module.exports = [
       },
       {
         "Weather Info": {
-          "desc": "Confirmed Shizo upstream route. Input parameters have not been specified.",
+          "desc": "Retrieve weather information using the upstream service. Supply its supported location parameter.",
           "path": "/api/teddyai/tools/weather-info",
           "params": [],
           "methods": [
@@ -743,7 +743,7 @@ module.exports = [
       },
       {
         "Domain WhoIs": {
-          "desc": "Confirmed Shizo upstream route. Input parameters have not been specified.",
+          "desc": "Retrieve domain registration and lookup information using the upstream service. Supply a domain if required.",
           "path": "/api/teddyai/tools/domain-whois",
           "params": [],
           "methods": [
