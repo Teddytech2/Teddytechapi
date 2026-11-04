@@ -7,9 +7,9 @@ module.exports = [
     "items": [
       {
         "ChatGPT": {
-          "desc": "TEDDY-TECH AI endpoint · JSON. Route and parameters require upstream verification.",
-          "path": "/api/teddy/ai/chatgpt",
-          "params": [],
+          "desc": "Send a prompt to ChatGPT and receive a JSON response. Enter your prompt in the Test Endpoint form.",
+          "path": "/api/teddy/ai/chatgpt?prompt=",
+          "params": [{"name":"prompt","required":true,"description":"Enter the message you want ChatGPT to answer"}],
           "methods": [
             "GET"
           ],

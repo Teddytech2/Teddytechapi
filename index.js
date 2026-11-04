@@ -115,9 +115,7 @@ const allEndpoints = loadEndpointsFromDirectory('api');
 // native /api/... route namespace upstream.
 const shizoConfig = require('./config').providers.shizo;
 const axios = require('axios');
-app.all('/api/teddy/*', async (req, res) => {
-    const suffix = req.path.replace(/^\/api\/teddy(?=\/|$)/, '');
-    const upstreamPath = `/api${suffix.startsWith('/') ? suffix : `/${suffix}`}`;
+async function handleTeddyProvider(req, res, upstreamPath) {
     try {
         const upstream = await axios({
             method: req.method,
@@ -145,7 +143,15 @@ app.all('/api/teddy/*', async (req, res) => {
         logger.warn(`TEDDY provider request failed: ${error.message}`);
         return res.status(502).json({ status: false, creator: 'Teddy Tech', message: 'This endpoint is temporarily unavailable.' });
     }
+}
+app.all('/api/teddy/*', (req, res) => {
+    const suffix = req.path.replace(/^\/api\/teddy(?=\/|$)/, '');
+    const upstreamPath = `/api${suffix.startsWith('/') ? suffix : `/${suffix}`}`;
+    return handleTeddyProvider(req, res, upstreamPath);
 });
+// Backwards-compatible native-style alias: /api/ai/chatgpt -> Shizo /api/ai/chatgpt.
+// Other TEDDY-branded catalogue routes remain under /api/teddy/.
+app.all('/api/ai/*', (req, res) => handleTeddyProvider(req, res, req.path));
 
 // Add Neosoft AI, image, search, Pixiv, profile and utility endpoints.
 // The TEDDY route handler above owns /api/teddy/*, so these requests cannot
