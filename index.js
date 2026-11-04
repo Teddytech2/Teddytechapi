@@ -115,40 +115,59 @@ const allEndpoints = loadEndpointsFromDirectory('api');
 const shizoConfig = require('./config').providers.shizo;
 const axios = require('axios');
 
-function getShizoUpstreamPath(publicSuffix) {
-    const suffix = publicSuffix.startsWith('/') ? publicSuffix : `/${publicSuffix}`;
-    // This is the one route confirmed by the user's successful live request.
-    if (/^\/ai\/chatgpt\/?$/.test(suffix)) return '/ai/gpt';
-    return suffix;
+function getShizoUpstreamCandidates(publicSuffix) {
+    const suffix = (publicSuffix.startsWith('/') ? publicSuffix : `/${publicSuffix}`).replace(/\/+$/, '') || '/';
+    if (suffix === '/ai/chatgpt' || suffix === '/ai/gpt') return ['/ai/gpt'];
+
+    // The public catalogue is organized by category/name. Try the native
+    // category/name route first, then common Shizo route layouts. This keeps
+    // every supplied catalogue item callable without hard-coding 51 guesses.
+    const parts = suffix.split('/').filter(Boolean);
+    const category = parts[0] || '';
+    const slug = parts.slice(1).join('/') || '';
+    const candidates = [suffix];
+    if (slug) {
+        candidates.push(`/${category}/${slug.replace(/-/g, '')}`);
+        candidates.push(`/${category}/${slug.replace(/-/g, '_')}`);
+        candidates.push(`/${slug}`);
+        candidates.push(`/api${suffix}`); // compatibility with providers using an /api prefix
+    }
+    return [...new Set(candidates)];
 }
 
-async function handleTeddyProvider(req, res, upstreamPath) {
+async function handleTeddyProvider(req, res, upstreamCandidates) {
+    const candidates = Array.isArray(upstreamCandidates) ? upstreamCandidates : [upstreamCandidates];
     try {
-        const query = { ...req.query };
-        // The public tester calls its input `prompt`; Shizo expects `query`.
-        if (upstreamPath === '/ai/gpt') {
-            if (query.prompt && !query.query) query.query = query.prompt;
-            delete query.prompt;
+        const originalQuery = { ...req.query };
+        delete originalQuery.apikey;
+        // Accept the common input names used by the public tester while
+        // preserving explicitly supplied provider parameters.
+        if (candidates.includes('/ai/gpt')) {
+            originalQuery.query = originalQuery.query || originalQuery.prompt || originalQuery.text;
+            delete originalQuery.prompt;
+            delete originalQuery.text;
         }
-        // Never allow a caller to override the server-configured provider key.
-        delete query[shizoConfig.authQuery || 'apikey'];
-        query[shizoConfig.authQuery || 'apikey'] = shizoConfig.apiKey;
-
-        const upstream = await axios({
-            method: req.method,
-            url: `${shizoConfig.baseUrl}${upstreamPath}`,
-            params: query,
-            data: ['POST', 'PUT', 'PATCH', 'DELETE'].includes(req.method) ? req.body : undefined,
-            timeout: 60000,
-            responseType: 'arraybuffer',
-            validateStatus: () => true,
-            headers: {
-                'User-Agent': 'TEDDY-TECH-API/4.0',
-                ...(req.headers['content-type'] ? { 'Content-Type': req.headers['content-type'] } : {})
-            },
-            maxContentLength: 25 * 1024 * 1024,
-            maxBodyLength: 25 * 1024 * 1024
-        });
+        const query = { ...originalQuery, [shizoConfig.authQuery || 'apikey']: shizoConfig.apiKey };
+        let upstream;
+        for (const upstreamPath of candidates) {
+            upstream = await axios({
+                method: req.method,
+                url: `${shizoConfig.baseUrl}${upstreamPath}`,
+                params: query,
+                data: ['POST', 'PUT', 'PATCH', 'DELETE'].includes(req.method) ? req.body : undefined,
+                timeout: 60000,
+                responseType: 'arraybuffer',
+                validateStatus: () => true,
+                headers: {
+                    'User-Agent': 'TEDDY-TECH-API/4.0',
+                    ...(req.headers['content-type'] ? { 'Content-Type': req.headers['content-type'] } : {})
+                },
+                maxContentLength: 25 * 1024 * 1024,
+                maxBodyLength: 25 * 1024 * 1024
+            });
+            // A 404 is the only response that triggers another route alias.
+            if (upstream.status !== 404) break;
+        }
         res.status(upstream.status);
         res.setHeader('Content-Type', upstream.headers['content-type'] || 'application/json; charset=utf-8');
         for (const header of ['cache-control', 'content-disposition']) {
@@ -164,15 +183,15 @@ async function handleTeddyProvider(req, res, upstreamPath) {
 function registerTeddyRoute(publicPrefix) {
     app.all(`${publicPrefix}/*`, (req, res) => {
         const suffix = req.path.slice(publicPrefix.length) || '/';
-        return handleTeddyProvider(req, res, getShizoUpstreamPath(suffix));
+        return handleTeddyProvider(req, res, getShizoUpstreamCandidates(suffix));
     });
 }
 registerTeddyRoute('/api/teddyai');
 // Keep the previous public namespace working as a backward-compatible alias.
 registerTeddyRoute('/api/teddy');
 // Older unprefixed AI aliases remain available for compatibility.
-app.all('/api/ai/chatgpt', (req, res) => handleTeddyProvider(req, res, '/ai/gpt'));
-app.all('/api/ai/*', (req, res) => handleTeddyProvider(req, res, req.path.replace(/^\/api(?=\/)/, '')));
+app.all('/api/ai/chatgpt', (req, res) => handleTeddyProvider(req, res, ['/ai/gpt']));
+app.all('/api/ai/*', (req, res) => handleTeddyProvider(req, res, getShizoUpstreamCandidates(req.path.replace(/^\/api(?=\/)/, ''))));
 
 // Add Neosoft AI, image, search, Pixiv, profile and utility endpoints.
 // The TEDDY route handler above owns /api/teddyai/*, so these requests cannot
