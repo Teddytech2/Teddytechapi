@@ -115,12 +115,12 @@ const allEndpoints = loadEndpointsFromDirectory('api');
 // native /api/... route namespace upstream.
 const shizoConfig = require('./config').providers.shizo;
 const axios = require('axios');
-async function handleTeddyProvider(req, res, upstreamPath) {
+async function handleTeddyProvider(req, res, upstreamPath, queryOverride) {
     try {
         const upstream = await axios({
             method: req.method,
             url: `${shizoConfig.baseUrl}${upstreamPath}`,
-            params: req.query,
+            params: queryOverride || req.query,
             data: ['POST', 'PUT', 'PATCH', 'DELETE'].includes(req.method) ? req.body : undefined,
             timeout: 60000,
             responseType: 'arraybuffer',
@@ -144,13 +144,33 @@ async function handleTeddyProvider(req, res, upstreamPath) {
         return res.status(502).json({ status: false, creator: 'Teddy Tech', message: 'This endpoint is temporarily unavailable.' });
     }
 }
+// ChatGPT uses a prompt field in TEDDY's public API. Translate it to the
+// upstream message field while keeping the public route under /api/teddy/.
+// This exact route must be registered before the general TEDDY wildcard.
+app.all('/api/teddy/ai/chatgpt', (req, res) => {
+    const query = { ...req.query };
+    if (query.prompt && !query.text) query.text = query.prompt;
+    delete query.prompt;
+    return handleTeddyProvider(req, res, '/api/ai/chatgpt', query);
+});
+
 app.all('/api/teddy/*', (req, res) => {
     const suffix = req.path.replace(/^\/api\/teddy(?=\/|$)/, '');
     const upstreamPath = `/api${suffix.startsWith('/') ? suffix : `/${suffix}`}`;
     return handleTeddyProvider(req, res, upstreamPath);
 });
-// Backwards-compatible native-style alias: /api/ai/chatgpt -> Shizo /api/ai/chatgpt.
-// Other TEDDY-branded catalogue routes remain under /api/teddy/.
+// Explicit compatibility route for the ChatGPT endpoint. Register the exact
+// path as well as the wildcard so deployments/proxies cannot miss this route.
+app.all('/api/ai/chatgpt', (req, res) => {
+    const query = { ...req.query };
+    // The public tester calls this field `prompt`; Shizo's chat endpoint
+    // accepts the message as `text`. Preserve explicit `text` if supplied.
+    if (query.prompt && !query.text) query.text = query.prompt;
+    delete query.prompt;
+    req.query = query;
+    return handleTeddyProvider(req, res, '/api/ai/chatgpt');
+});
+// Backwards-compatible native-style aliases for other AI routes.
 app.all('/api/ai/*', (req, res) => handleTeddyProvider(req, res, req.path));
 
 // Add Neosoft AI, image, search, Pixiv, profile and utility endpoints.
