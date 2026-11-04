@@ -113,6 +113,7 @@ const allEndpoints = loadEndpointsFromDirectory('api');
 // Add Neosoft AI, image, search, Pixiv, profile and utility endpoints.
 // Requests are allow-listed against Neosoft's published manifest.
 const neosoftCatalogue = require('./neosoftProxy').register(app, allEndpoints);
+const shizoCatalogue = require('./shizoCatalogue');
 
 // Additional public endpoints provided through the fixed CypherX media service.
 require('./cypherxProxy').register(app);
@@ -139,13 +140,14 @@ app.get('/endpoints', async (req, res) => {
         const catalogue = req.query.refresh === '1'
             ? await neosoftCatalogue.refresh()
             : await neosoftCatalogue.getCatalogue();
-        const count = catalogue.reduce((n, category) => n + category.items.length, 0);
+        const combined = [...catalogue, ...shizoCatalogue];
+        const count = combined.reduce((n, category) => n + category.items.length, 0);
         res.set({
             'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
             'Pragma': 'no-cache',
             'Expires': '0'
         });
-        res.json({ status: true, count, endpoints: catalogue, updatedAt: new Date().toISOString() });
+        res.json({ status: true, count, endpoints: combined, updatedAt: new Date().toISOString() });
     } catch (error) {
         logger.warn(`Endpoint catalogue refresh failed: ${error.message}`);
         res.status(503).json({ status: false, message: 'Endpoint catalogue is temporarily unavailable.' });

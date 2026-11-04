@@ -1,7 +1,7 @@
 {
   "name": "teddy-tech-api",
-  "version": "3.0.0",
-  "description": "TEDDY-TECH API \u2014 media, AI, search and utility API platform by Teddy Tech",
+  "version": "4.0.0",
+  "description": "TEDDY-TECH API V4 \u2014 multi-provider API catalogue by Teddy Tech",
   "main": "index.js",
   "type": "commonjs",
   "scripts": {

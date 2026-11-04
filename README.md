@@ -64,3 +64,14 @@ Deploy as a standard Node.js service with `npm install` and `npm start`. Vercel 
 - Name: TEDDY-TECH API
 - Maintainer: Teddy Tech
 - Repository: https://github.com/Teddyxmd/TEDDY-XMD
+
+
+## V4 Shizo catalogue
+
+The user-confirmed Shizo display catalogue is included in `shizoCatalogue.js` (52 named entries; Cosplay intentionally empty). The names and categories are confirmed, but the supplied list did not include Shizo route paths, HTTP methods, parameter schemas, or an API manifest. Therefore the `/api/shizo/...` paths are provisional catalogue slugs and are **not claimed to be live-tested or functional upstream routes**. Obtain Shizo's route definitions before enabling production proxying. Neosoft remains manifest-driven; existing TEDDY-TECH and CypherX integrations are preserved.
+
+## Server configuration (no provider environment variables)
+
+Provider settings are kept in the server-side `config.js` file. The Shizo default key is configured as `shizo`; it is not loaded into the browser bundle. Neosoft and CypherX provider URLs are also configured there. You do not need to create provider API-key environment variables. The hosting platform may still inject `PORT` automatically; that is a web-server runtime setting, not a provider credential.
+
+**Shizo authentication note:** `config.js` currently records `X-API-Key` as the intended header name, but this must match Shizo's actual authentication contract. The key being present in config does not prove the upstream accepts it. Also, the 52 Shizo catalogue entries remain display-only provisional slugs until the real Shizo paths and parameters are available.
