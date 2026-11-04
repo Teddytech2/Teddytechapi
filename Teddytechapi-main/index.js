@@ -157,7 +157,12 @@ const SHIZO_CONFIRMED_ROUTES = {
     "/tools/forex-exchange": "/tools/currency-convert",
     "/tools/ip-information": "/tools/ip-infp",
     "/tools/weather-info": "/tools/weather",
-    "/tools/domain-whois": "/tools/domain-check"
+    "/tools/domain-whois": "/tools/domain-check",
+    "/downloader/download": "/downloader/download",
+    "/downloader/youtube": "/downloader/youtube",
+    "/downloader/twitter": "/downloader/twitter",
+    "/downloader/tiktok": "/downloader/tiktok",
+    "/downloader/instagram": "/downloader/instagram"
 };
 
 function getShizoUpstreamCandidates(publicSuffix) {

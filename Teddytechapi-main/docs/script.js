@@ -205,6 +205,51 @@
     catch (error) { toast(error.message); }
   });
   $('#copy-response').addEventListener('click', () => copyText($('#response-output').textContent));
+
+  function mediaKind(url, key = '') {
+    const hint = `${key} ${url}`.toLowerCase();
+    if (/\.(mp4|webm|mov|m4v|m3u8)(?:[?#]|$)|video|playback|stream/.test(hint)) return 'video';
+    if (/\.(mp3|wav|ogg|m4a|aac)(?:[?#]|$)|audio|music/.test(hint)) return 'audio';
+    if (/\.(png|jpe?g|gif|webp|avif|svg|bmp)(?:[?#]|$)|image|thumbnail|cover|photo|poster/.test(hint)) return 'image';
+    return '';
+  }
+
+  function collectMedia(value, key = '', found = [], depth = 0) {
+    if (depth > 8 || found.length >= 12 || value == null) return found;
+    if (typeof value === 'string') {
+      if (/^https?:\/\//i.test(value) || /^data:(image|video|audio)\//i.test(value)) {
+        const kind = mediaKind(value, key) || (/^data:image\//i.test(value) ? 'image' : /^data:video\//i.test(value) ? 'video' : /^data:audio\//i.test(value) ? 'audio' : '');
+        if (kind && !found.some(item => item.url === value)) found.push({ url: value, kind, label: key || kind });
+      }
+      return found;
+    }
+    if (Array.isArray(value)) { value.forEach((item, index) => collectMedia(item, `${key}[${index}]`, found, depth + 1)); return found; }
+    if (typeof value === 'object') Object.entries(value).forEach(([childKey, child]) => collectMedia(child, childKey, found, depth + 1));
+    return found;
+  }
+
+  function showMedia(items) {
+    const preview = $('#media-preview');
+    preview.replaceChildren();
+    preview.hidden = !items.length;
+    items.forEach(item => {
+      const figure = document.createElement('figure');
+      figure.className = 'media-item';
+      let media;
+      if (item.kind === 'video') {
+        media = document.createElement('video'); media.controls = true; media.playsInline = true; media.preload = 'metadata';
+      } else if (item.kind === 'audio') {
+        media = document.createElement('audio'); media.controls = true; media.preload = 'metadata';
+      } else {
+        media = document.createElement('img'); media.alt = item.label || 'API generated image'; media.loading = 'lazy';
+      }
+      media.src = item.url;
+      figure.appendChild(media);
+      const caption = document.createElement('figcaption');
+      const link = document.createElement('a'); link.href = item.url; link.target = '_blank'; link.rel = 'noopener noreferrer'; link.textContent = `Open ${item.kind}`;
+      caption.appendChild(link); figure.appendChild(caption); preview.appendChild(figure);
+    });
+  }
   $('#request-form').addEventListener('submit', async event => {
     event.preventDefault();
     const sendButton = $('#send-request');
@@ -222,14 +267,28 @@
       const elapsed = Math.round(performance.now() - started);
       const contentType = response.headers.get('content-type') || '';
       let output;
-      if (contentType.includes('application/json')) {
+      let mediaItems = [];
+      if (contentType.includes('application/json') || contentType.includes('+json')) {
         const data = await response.json();
         output = JSON.stringify(data, null, 2);
-      } else if (contentType.startsWith('image/')) {
-        output = `[Image response: ${contentType}; ${response.status} ${response.statusText}]`;
+        mediaItems = collectMedia(data);
+      } else if (/^(image|video|audio)\//i.test(contentType)) {
+        const blob = await response.blob();
+        const objectUrl = URL.createObjectURL(blob);
+        const kind = contentType.startsWith('video/') ? 'video' : contentType.startsWith('audio/') ? 'audio' : 'image';
+        mediaItems = [{ url: objectUrl, kind, label: `API ${kind} response` }];
+        output = `[${kind.toUpperCase()} response: ${contentType}; ${response.status} ${response.statusText}]`;
       } else {
         output = await response.text();
+        try { const parsed = JSON.parse(output); mediaItems = collectMedia(parsed); output = JSON.stringify(parsed, null, 2); }
+        catch { /* Keep non-JSON text responses readable. */ }
+        if (!mediaItems.length) {
+          const direct = output.trim();
+          const kind = mediaKind(direct);
+          if (kind && /^https?:\/\//i.test(direct)) mediaItems = [{ url: direct, kind, label: kind }];
+        }
       }
+      showMedia(mediaItems);
       $('#response-status').textContent = `${response.status} ${response.ok ? 'OK' : 'ERROR'}`;
       $('#response-status').style.color = response.ok ? 'var(--green)' : '#ff8585';
       $('#response-time').textContent = `${elapsed} ms`;
@@ -239,6 +298,7 @@
     } catch (error) {
       $('#response-status').textContent = 'REQUEST ERROR';
       $('#response-time').textContent = '';
+      showMedia([]);
       $('#response-output').textContent = error.message;
       responsePanel.hidden = false;
     } finally {

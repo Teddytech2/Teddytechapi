@@ -760,111 +760,48 @@ module.exports = [
     "name": "TEDDY · Downloader",
     "items": [
       {
-        "Facebook Downloader": {
-          "desc": "TEDDY-TECH Downloader endpoint · JSON. Route and parameters require upstream verification.",
-          "path": "/api/teddyai/downloader/facebook-downloader",
-          "params": [
-            {
-              "name": "url",
-              "required": true,
-              "description": "Paste the media URL"
-            }
-          ],
-          "methods": [
-            "GET"
-          ],
-          "provider": "TEDDY-TECH",
-          "verified": false
-        }
-      },
-      {
-        "Instagram Downloader": {
-          "desc": "TEDDY-TECH Downloader endpoint · JSON. Route and parameters require upstream verification.",
-          "path": "/api/teddyai/downloader/instagram-downloader",
-          "params": [
-            {
-              "name": "url",
-              "required": true,
-              "description": "Paste the media URL"
-            }
-          ],
-          "methods": [
-            "GET"
-          ],
-          "provider": "TEDDY-TECH",
-          "verified": false
-        }
-      },
-      {
-        "TikTok Downloader": {
-          "desc": "TEDDY-TECH Downloader endpoint · JSON. Route and parameters require upstream verification.",
-          "path": "/api/teddyai/downloader/tiktok-downloader",
-          "params": [
-            {
-              "name": "url",
-              "required": true,
-              "description": "Paste the media URL"
-            }
-          ],
-          "methods": [
-            "GET"
-          ],
-          "provider": "TEDDY-TECH",
-          "verified": false
-        }
-      },
-      {
-        "Twitter/X Downloader": {
-          "desc": "TEDDY-TECH Downloader endpoint · JSON. Route and parameters require upstream verification.",
-          "path": "/api/teddyai/downloader/twitter-x-downloader",
-          "params": [
-            {
-              "name": "url",
-              "required": true,
-              "description": "Paste the media URL"
-            }
-          ],
-          "methods": [
-            "GET"
-          ],
-          "provider": "TEDDY-TECH",
-          "verified": false
+        "Universal Downloader": {
+          "desc": "Download supported media from a supplied public URL.",
+          "path": "/api/teddyai/downloader/download?url=",
+          "params": [{"name": "url", "required": true, "description": "Paste the media URL"}],
+          "methods": ["GET"], "provider": "TEDDY-TECH", "verified": true,
+          "upstreamPath": "/downloader/download"
         }
       },
       {
         "YouTube Downloader": {
-          "desc": "TEDDY-TECH Downloader endpoint · JSON. Route and parameters require upstream verification.",
-          "path": "/api/teddyai/downloader/youtube-downloader",
-          "params": [
-            {
-              "name": "url",
-              "required": true,
-              "description": "Paste the media URL"
-            }
-          ],
-          "methods": [
-            "GET"
-          ],
-          "provider": "TEDDY-TECH",
-          "verified": false
+          "desc": "Download media from a YouTube video URL.",
+          "path": "/api/teddyai/downloader/youtube?url=",
+          "params": [{"name": "url", "required": true, "description": "Paste the YouTube video URL"}],
+          "methods": ["GET"], "provider": "TEDDY-TECH", "verified": true,
+          "upstreamPath": "/downloader/youtube"
         }
       },
       {
-        "Universal Downloader": {
-          "desc": "TEDDY-TECH Downloader endpoint · JSON. Route and parameters require upstream verification.",
-          "path": "/api/teddyai/downloader/universal-downloader",
-          "params": [
-            {
-              "name": "url",
-              "required": true,
-              "description": "Paste the media URL"
-            }
-          ],
-          "methods": [
-            "GET"
-          ],
-          "provider": "TEDDY-TECH",
-          "verified": false
+        "Twitter/X Downloader": {
+          "desc": "Download media from a Twitter/X post URL.",
+          "path": "/api/teddyai/downloader/twitter?url=",
+          "params": [{"name": "url", "required": true, "description": "Paste the Twitter/X post URL"}],
+          "methods": ["GET"], "provider": "TEDDY-TECH", "verified": true,
+          "upstreamPath": "/downloader/twitter"
+        }
+      },
+      {
+        "TikTok Downloader": {
+          "desc": "Download media from a TikTok video URL.",
+          "path": "/api/teddyai/downloader/tiktok?url=",
+          "params": [{"name": "url", "required": true, "description": "Paste the TikTok video URL"}],
+          "methods": ["GET"], "provider": "TEDDY-TECH", "verified": true,
+          "upstreamPath": "/downloader/tiktok"
+        }
+      },
+      {
+        "Instagram Downloader": {
+          "desc": "Download media from an Instagram post or reel URL.",
+          "path": "/api/teddyai/downloader/instagram?url=",
+          "params": [{"name": "url", "required": true, "description": "Paste the Instagram post or reel URL"}],
+          "methods": ["GET"], "provider": "TEDDY-TECH", "verified": true,
+          "upstreamPath": "/downloader/instagram"
         }
       }
     ]
