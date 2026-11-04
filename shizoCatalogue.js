@@ -507,7 +507,7 @@ module.exports = [
     "items": [
       {
         "Motivational Quotes": {
-          "desc": "TEDDY Tools endpoint for meme search. Pass the search input required by the upstream service; the response is returned by the API.",
+          "desc": "Returns a motivational quote. No additional input is required.",
           "path": "/api/teddyai/quote/motivational-quotes",
           "params": [],
           "methods": [
