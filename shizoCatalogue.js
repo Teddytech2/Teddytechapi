@@ -401,38 +401,41 @@ module.exports = [
     "items": [
       {
         "Indian Pies": {
-          "desc": "TEDDY-TECH Pies endpoint · IMG. Route and parameters require upstream verification.",
+          "desc": "Returns Indian pies imagery from the configured provider.",
           "path": "/api/teddyai/pies/indian-pies",
           "params": [],
           "methods": [
             "GET"
           ],
           "provider": "TEDDY-TECH",
-          "verified": false
+          "verified": true,
+          "upstreamPath": "/pies/india"
         }
       },
       {
         "China Pies": {
-          "desc": "TEDDY-TECH Pies endpoint · IMG. Route and parameters require upstream verification.",
+          "desc": "Returns China pies imagery from the configured provider.",
           "path": "/api/teddyai/pies/china-pies",
           "params": [],
           "methods": [
             "GET"
           ],
           "provider": "TEDDY-TECH",
-          "verified": false
+          "verified": true,
+          "upstreamPath": "/pies/china"
         }
       },
       {
         "Indonesian Pies": {
-          "desc": "TEDDY-TECH Pies endpoint · IMG. Route and parameters require upstream verification.",
+          "desc": "Returns Indonesian pies imagery from the configured provider.",
           "path": "/api/teddyai/pies/indonesian-pies",
           "params": [],
           "methods": [
             "GET"
           ],
           "provider": "TEDDY-TECH",
-          "verified": false
+          "verified": true,
+          "upstreamPath": "/pies/indonesia"
         }
       },
       {
