@@ -38,6 +38,7 @@
         }
         return {
           name,
+          groupName: safeText(group.name || 'Other'),
           desc: value.desc || value.description || '',
           path: path.split('?')[0],
           params: params.map(param => ({ name: safeText(param.name || param.key), required: param.required !== false, description: param.description || '' })).filter(param => param.name),
@@ -141,6 +142,22 @@
       wrapper.innerHTML = `<label for="${id}">${escapeHtml(param.name)} ${param.required ? '<em>Required</em>' : '<em>Optional</em>'}</label><input id="${id}" name="${escapeHtml(param.name)}" autocomplete="off" placeholder="${escapeHtml(param.description || (param.required ? `Enter ${param.name}` : 'Leave blank if not needed'))}" ${param.required ? 'required' : ''}>`;
       fields.appendChild(wrapper);
     });
+    // Every catalogue card gets a usable input, even while upstream parameter
+    // metadata is unavailable. Choose a sensible parameter name from its group.
+    if (!item.params.length) {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'field';
+      const groupName = (item.groupName || '').toLowerCase();
+      const itemName = item.name.toLowerCase();
+      const isDownloader = groupName.includes('downloader') || /download/.test(itemName);
+      const isAi = groupName.includes('ai') || /chatgpt|dall|image/.test(itemName);
+      const isImage = /image|screenshot|background|fanart|waifu|neko|husby|shota|annie|mikasa|nami|sakura|sasha|vivi|pies/.test(itemName) || ['fanart','sfw','pies'].some(x => groupName.includes(x));
+      const paramName = isDownloader || isImage ? 'url' : (isAi ? 'prompt' : 'text');
+      const label = paramName === 'url' ? 'Image or video URL' : (paramName === 'prompt' ? 'Prompt' : 'Input');
+      const id = `generic-${Math.random().toString(36).slice(2)}`;
+      wrapper.innerHTML = `<label for="${id}">${label} <em>Input</em></label><input id="${id}" name="${paramName}" autocomplete="off" placeholder="${paramName === 'url' ? 'Paste a URL here' : 'Enter your prompt or text here'}">`;
+      fields.appendChild(wrapper);
+    }
     $('#response-panel').hidden = true;
     $('#body-field').hidden = !['POST', 'PUT', 'PATCH'].includes(methodSelect.value);
     methodSelect.onchange = () => { $('#body-field').hidden = !['POST', 'PUT', 'PATCH'].includes(methodSelect.value); };

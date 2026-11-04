@@ -8,7 +8,7 @@ module.exports = [
       {
         "ChatGPT": {
           "desc": "Send a prompt to ChatGPT and receive a JSON response. Enter your prompt in the Test Endpoint form.",
-          "path": "/api/teddy/ai/chatgpt?prompt=",
+          "path": "/api/teddyai/ai/chatgpt?prompt=",
           "params": [{"name":"prompt","required":true,"description":"Enter the message you want ChatGPT to answer"}],
           "methods": [
             "GET"
@@ -20,7 +20,7 @@ module.exports = [
       {
         "Dall E Imagine": {
           "desc": "TEDDY-TECH AI endpoint · IMG. Route and parameters require upstream verification.",
-          "path": "/api/teddy/ai/dall-e-imagine",
+          "path": "/api/teddyai/ai/dall-e-imagine",
           "params": [],
           "methods": [
             "GET"
@@ -32,7 +32,7 @@ module.exports = [
       {
         "AI Image Upscaler": {
           "desc": "TEDDY-TECH AI endpoint · JSON. Route and parameters require upstream verification.",
-          "path": "/api/teddy/ai/ai-image-upscaler",
+          "path": "/api/teddyai/ai/ai-image-upscaler",
           "params": [],
           "methods": [
             "GET"
@@ -44,7 +44,7 @@ module.exports = [
       {
         "AI Image Enhancer": {
           "desc": "TEDDY-TECH AI endpoint · JSON. Route and parameters require upstream verification.",
-          "path": "/api/teddy/ai/ai-image-enhancer",
+          "path": "/api/teddyai/ai/ai-image-enhancer",
           "params": [],
           "methods": [
             "GET"
@@ -56,7 +56,7 @@ module.exports = [
       {
         "AI Image Sharpener": {
           "desc": "TEDDY-TECH AI endpoint · JSON. Route and parameters require upstream verification.",
-          "path": "/api/teddy/ai/ai-image-sharpener",
+          "path": "/api/teddyai/ai/ai-image-sharpener",
           "params": [],
           "methods": [
             "GET"
@@ -73,7 +73,7 @@ module.exports = [
       {
         "Cards (premium)": {
           "desc": "TEDDY-TECH Games endpoint · JSON. Route and parameters require upstream verification.",
-          "path": "/api/teddy/games/cards-premium",
+          "path": "/api/teddyai/games/cards-premium",
           "params": [],
           "methods": [
             "GET"
@@ -85,7 +85,7 @@ module.exports = [
       {
         "Guess App Name": {
           "desc": "TEDDY-TECH Games endpoint · JSON. Route and parameters require upstream verification.",
-          "path": "/api/teddy/games/guess-app-name",
+          "path": "/api/teddyai/games/guess-app-name",
           "params": [],
           "methods": [
             "GET"
@@ -97,7 +97,7 @@ module.exports = [
       {
         "Guess Song Lyrics": {
           "desc": "TEDDY-TECH Games endpoint · JSON. Route and parameters require upstream verification.",
-          "path": "/api/teddy/games/guess-song-lyrics",
+          "path": "/api/teddyai/games/guess-song-lyrics",
           "params": [],
           "methods": [
             "GET"
@@ -109,7 +109,7 @@ module.exports = [
       {
         "Guess The Words": {
           "desc": "TEDDY-TECH Games endpoint · JSON. Route and parameters require upstream verification.",
-          "path": "/api/teddy/games/guess-the-words",
+          "path": "/api/teddyai/games/guess-the-words",
           "params": [],
           "methods": [
             "GET"
@@ -121,7 +121,7 @@ module.exports = [
       {
         "Emoji Riddles": {
           "desc": "TEDDY-TECH Games endpoint · JSON. Route and parameters require upstream verification.",
-          "path": "/api/teddy/games/emoji-riddles",
+          "path": "/api/teddyai/games/emoji-riddles",
           "params": [],
           "methods": [
             "GET"
@@ -138,7 +138,7 @@ module.exports = [
       {
         "Annie": {
           "desc": "TEDDY-TECH Fanart endpoint · IMG. Route and parameters require upstream verification.",
-          "path": "/api/teddy/fanart/annie",
+          "path": "/api/teddyai/fanart/annie",
           "params": [],
           "methods": [
             "GET"
@@ -150,7 +150,7 @@ module.exports = [
       {
         "Mikasa": {
           "desc": "TEDDY-TECH Fanart endpoint · IMG. Route and parameters require upstream verification.",
-          "path": "/api/teddy/fanart/mikasa",
+          "path": "/api/teddyai/fanart/mikasa",
           "params": [],
           "methods": [
             "GET"
@@ -162,7 +162,7 @@ module.exports = [
       {
         "Nami": {
           "desc": "TEDDY-TECH Fanart endpoint · IMG. Route and parameters require upstream verification.",
-          "path": "/api/teddy/fanart/nami",
+          "path": "/api/teddyai/fanart/nami",
           "params": [],
           "methods": [
             "GET"
@@ -174,7 +174,7 @@ module.exports = [
       {
         "Sakura": {
           "desc": "TEDDY-TECH Fanart endpoint · IMG. Route and parameters require upstream verification.",
-          "path": "/api/teddy/fanart/sakura",
+          "path": "/api/teddyai/fanart/sakura",
           "params": [],
           "methods": [
             "GET"
@@ -186,7 +186,7 @@ module.exports = [
       {
         "Sasha": {
           "desc": "TEDDY-TECH Fanart endpoint · IMG. Route and parameters require upstream verification.",
-          "path": "/api/teddy/fanart/sasha",
+          "path": "/api/teddyai/fanart/sasha",
           "params": [],
           "methods": [
             "GET"
@@ -198,7 +198,7 @@ module.exports = [
       {
         "Vivi": {
           "desc": "TEDDY-TECH Fanart endpoint · IMG. Route and parameters require upstream verification.",
-          "path": "/api/teddy/fanart/vivi",
+          "path": "/api/teddyai/fanart/vivi",
           "params": [],
           "methods": [
             "GET"
@@ -215,7 +215,7 @@ module.exports = [
       {
         "Husby": {
           "desc": "TEDDY-TECH SFW endpoint · IMG. Route and parameters require upstream verification.",
-          "path": "/api/teddy/sfw/husby",
+          "path": "/api/teddyai/sfw/husby",
           "params": [],
           "methods": [
             "GET"
@@ -227,7 +227,7 @@ module.exports = [
       {
         "Loli": {
           "desc": "TEDDY-TECH SFW endpoint · IMG. Route and parameters require upstream verification.",
-          "path": "/api/teddy/sfw/loli",
+          "path": "/api/teddyai/sfw/loli",
           "params": [],
           "methods": [
             "GET"
@@ -239,7 +239,7 @@ module.exports = [
       {
         "Neko": {
           "desc": "TEDDY-TECH SFW endpoint · IMG. Route and parameters require upstream verification.",
-          "path": "/api/teddy/sfw/neko",
+          "path": "/api/teddyai/sfw/neko",
           "params": [],
           "methods": [
             "GET"
@@ -251,7 +251,7 @@ module.exports = [
       {
         "Shota": {
           "desc": "TEDDY-TECH SFW endpoint · IMG. Route and parameters require upstream verification.",
-          "path": "/api/teddy/sfw/shota",
+          "path": "/api/teddyai/sfw/shota",
           "params": [],
           "methods": [
             "GET"
@@ -263,7 +263,7 @@ module.exports = [
       {
         "Waifu": {
           "desc": "TEDDY-TECH SFW endpoint · IMG. Route and parameters require upstream verification.",
-          "path": "/api/teddy/sfw/waifu",
+          "path": "/api/teddyai/sfw/waifu",
           "params": [],
           "methods": [
             "GET"
@@ -280,7 +280,7 @@ module.exports = [
       {
         "Indian Pies": {
           "desc": "TEDDY-TECH Pies endpoint · IMG. Route and parameters require upstream verification.",
-          "path": "/api/teddy/pies/indian-pies",
+          "path": "/api/teddyai/pies/indian-pies",
           "params": [],
           "methods": [
             "GET"
@@ -292,7 +292,7 @@ module.exports = [
       {
         "China Pies": {
           "desc": "TEDDY-TECH Pies endpoint · IMG. Route and parameters require upstream verification.",
-          "path": "/api/teddy/pies/china-pies",
+          "path": "/api/teddyai/pies/china-pies",
           "params": [],
           "methods": [
             "GET"
@@ -304,7 +304,7 @@ module.exports = [
       {
         "Indonesian Pies": {
           "desc": "TEDDY-TECH Pies endpoint · IMG. Route and parameters require upstream verification.",
-          "path": "/api/teddy/pies/indonesian-pies",
+          "path": "/api/teddyai/pies/indonesian-pies",
           "params": [],
           "methods": [
             "GET"
@@ -316,7 +316,7 @@ module.exports = [
       {
         "Japanese Pies": {
           "desc": "TEDDY-TECH Pies endpoint · IMG. Route and parameters require upstream verification.",
-          "path": "/api/teddy/pies/japanese-pies",
+          "path": "/api/teddyai/pies/japanese-pies",
           "params": [],
           "methods": [
             "GET"
@@ -328,7 +328,7 @@ module.exports = [
       {
         "Korean Pies": {
           "desc": "TEDDY-TECH Pies endpoint · IMG. Route and parameters require upstream verification.",
-          "path": "/api/teddy/pies/korean-pies",
+          "path": "/api/teddyai/pies/korean-pies",
           "params": [],
           "methods": [
             "GET"
@@ -340,7 +340,7 @@ module.exports = [
       {
         "Malaysian Pies": {
           "desc": "TEDDY-TECH Pies endpoint · IMG. Route and parameters require upstream verification.",
-          "path": "/api/teddy/pies/malaysian-pies",
+          "path": "/api/teddyai/pies/malaysian-pies",
           "params": [],
           "methods": [
             "GET"
@@ -352,7 +352,7 @@ module.exports = [
       {
         "Thailand Pies": {
           "desc": "TEDDY-TECH Pies endpoint · IMG. Route and parameters require upstream verification.",
-          "path": "/api/teddy/pies/thailand-pies",
+          "path": "/api/teddyai/pies/thailand-pies",
           "params": [],
           "methods": [
             "GET"
@@ -364,7 +364,7 @@ module.exports = [
       {
         "Vietnamese Pies": {
           "desc": "TEDDY-TECH Pies endpoint · IMG. Route and parameters require upstream verification.",
-          "path": "/api/teddy/pies/vietnamese-pies",
+          "path": "/api/teddyai/pies/vietnamese-pies",
           "params": [],
           "methods": [
             "GET"
@@ -381,7 +381,7 @@ module.exports = [
       {
         "Motivational Quotes": {
           "desc": "TEDDY-TECH Quote endpoint · JSON. Route and parameters require upstream verification.",
-          "path": "/api/teddy/quote/motivational-quotes",
+          "path": "/api/teddyai/quote/motivational-quotes",
           "params": [],
           "methods": [
             "GET"
@@ -393,7 +393,7 @@ module.exports = [
       {
         "Truth (Question)": {
           "desc": "TEDDY-TECH Quote endpoint · JSON. Route and parameters require upstream verification.",
-          "path": "/api/teddy/quote/truth-question",
+          "path": "/api/teddyai/quote/truth-question",
           "params": [],
           "methods": [
             "GET"
@@ -405,7 +405,7 @@ module.exports = [
       {
         "Dare (Task)": {
           "desc": "TEDDY-TECH Quote endpoint · JSON. Route and parameters require upstream verification.",
-          "path": "/api/teddy/quote/dare-task",
+          "path": "/api/teddyai/quote/dare-task",
           "params": [],
           "methods": [
             "GET"
@@ -417,7 +417,7 @@ module.exports = [
       {
         "Flirts (English)": {
           "desc": "TEDDY-TECH Quote endpoint · JSON. Route and parameters require upstream verification.",
-          "path": "/api/teddy/quote/flirts-english",
+          "path": "/api/teddyai/quote/flirts-english",
           "params": [],
           "methods": [
             "GET"
@@ -429,7 +429,7 @@ module.exports = [
       {
         "Flirts (Hindi)": {
           "desc": "TEDDY-TECH Quote endpoint · JSON. Route and parameters require upstream verification.",
-          "path": "/api/teddy/quote/flirts-hindi",
+          "path": "/api/teddyai/quote/flirts-hindi",
           "params": [],
           "methods": [
             "GET"
@@ -441,7 +441,7 @@ module.exports = [
       {
         "Shayari (Hindi)": {
           "desc": "TEDDY-TECH Quote endpoint · JSON. Route and parameters require upstream verification.",
-          "path": "/api/teddy/quote/shayari-hindi",
+          "path": "/api/teddyai/quote/shayari-hindi",
           "params": [],
           "methods": [
             "GET"
@@ -453,7 +453,7 @@ module.exports = [
       {
         "Sweet Night Texts": {
           "desc": "TEDDY-TECH Quote endpoint · JSON. Route and parameters require upstream verification.",
-          "path": "/api/teddy/quote/sweet-night-texts",
+          "path": "/api/teddyai/quote/sweet-night-texts",
           "params": [],
           "methods": [
             "GET"
@@ -470,7 +470,7 @@ module.exports = [
       {
         "S Links (Shizo URL)": {
           "desc": "TEDDY-TECH Tools endpoint · JSON. Route and parameters require upstream verification.",
-          "path": "/api/teddy/tools/s-links-shizo-url",
+          "path": "/api/teddyai/tools/s-links-shizo-url",
           "params": [],
           "methods": [
             "GET"
@@ -482,7 +482,7 @@ module.exports = [
       {
         "Bit.ly Short URL": {
           "desc": "TEDDY-TECH Tools endpoint · JSON. Route and parameters require upstream verification.",
-          "path": "/api/teddy/tools/bit-ly-short-url",
+          "path": "/api/teddyai/tools/bit-ly-short-url",
           "params": [],
           "methods": [
             "GET"
@@ -494,7 +494,7 @@ module.exports = [
       {
         "Tiny Short URL": {
           "desc": "TEDDY-TECH Tools endpoint · JSON. Route and parameters require upstream verification.",
-          "path": "/api/teddy/tools/tiny-short-url",
+          "path": "/api/teddyai/tools/tiny-short-url",
           "params": [],
           "methods": [
             "GET"
@@ -506,7 +506,7 @@ module.exports = [
       {
         "Screenshot Website": {
           "desc": "TEDDY-TECH Tools endpoint · IMG. Route and parameters require upstream verification.",
-          "path": "/api/teddy/tools/screenshot-website",
+          "path": "/api/teddyai/tools/screenshot-website",
           "params": [],
           "methods": [
             "GET"
@@ -518,7 +518,7 @@ module.exports = [
       {
         "Remove Background": {
           "desc": "TEDDY-TECH Tools endpoint · IMG. Route and parameters require upstream verification.",
-          "path": "/api/teddy/tools/remove-background",
+          "path": "/api/teddyai/tools/remove-background",
           "params": [],
           "methods": [
             "GET"
@@ -530,7 +530,7 @@ module.exports = [
       {
         "Search Meme": {
           "desc": "TEDDY-TECH Tools endpoint · IMG. Route and parameters require upstream verification.",
-          "path": "/api/teddy/tools/search-meme",
+          "path": "/api/teddyai/tools/search-meme",
           "params": [],
           "methods": [
             "GET"
@@ -542,7 +542,7 @@ module.exports = [
       {
         "Forex Exchange": {
           "desc": "TEDDY-TECH Tools endpoint · JSON. Route and parameters require upstream verification.",
-          "path": "/api/teddy/tools/forex-exchange",
+          "path": "/api/teddyai/tools/forex-exchange",
           "params": [],
           "methods": [
             "GET"
@@ -554,7 +554,7 @@ module.exports = [
       {
         "IP Information": {
           "desc": "TEDDY-TECH Tools endpoint · JSON. Route and parameters require upstream verification.",
-          "path": "/api/teddy/tools/ip-information",
+          "path": "/api/teddyai/tools/ip-information",
           "params": [],
           "methods": [
             "GET"
@@ -566,7 +566,7 @@ module.exports = [
       {
         "Weather Info": {
           "desc": "TEDDY-TECH Tools endpoint · JSON. Route and parameters require upstream verification.",
-          "path": "/api/teddy/tools/weather-info",
+          "path": "/api/teddyai/tools/weather-info",
           "params": [],
           "methods": [
             "GET"
@@ -578,7 +578,7 @@ module.exports = [
       {
         "Domain WhoIs": {
           "desc": "TEDDY-TECH Tools endpoint · JSON. Route and parameters require upstream verification.",
-          "path": "/api/teddy/tools/domain-whois",
+          "path": "/api/teddyai/tools/domain-whois",
           "params": [],
           "methods": [
             "GET"
@@ -595,7 +595,7 @@ module.exports = [
       {
         "Facebook Downloader": {
           "desc": "TEDDY-TECH Downloader endpoint · JSON. Route and parameters require upstream verification.",
-          "path": "/api/teddy/downloader/facebook-downloader",
+          "path": "/api/teddyai/downloader/facebook-downloader",
           "params": [],
           "methods": [
             "GET"
@@ -607,7 +607,7 @@ module.exports = [
       {
         "Instagram Downloader": {
           "desc": "TEDDY-TECH Downloader endpoint · JSON. Route and parameters require upstream verification.",
-          "path": "/api/teddy/downloader/instagram-downloader",
+          "path": "/api/teddyai/downloader/instagram-downloader",
           "params": [],
           "methods": [
             "GET"
@@ -619,7 +619,7 @@ module.exports = [
       {
         "TikTok Downloader": {
           "desc": "TEDDY-TECH Downloader endpoint · JSON. Route and parameters require upstream verification.",
-          "path": "/api/teddy/downloader/tiktok-downloader",
+          "path": "/api/teddyai/downloader/tiktok-downloader",
           "params": [],
           "methods": [
             "GET"
@@ -631,7 +631,7 @@ module.exports = [
       {
         "Twitter/X Downloader": {
           "desc": "TEDDY-TECH Downloader endpoint · JSON. Route and parameters require upstream verification.",
-          "path": "/api/teddy/downloader/twitter-x-downloader",
+          "path": "/api/teddyai/downloader/twitter-x-downloader",
           "params": [],
           "methods": [
             "GET"
@@ -643,7 +643,7 @@ module.exports = [
       {
         "YouTube Downloader": {
           "desc": "TEDDY-TECH Downloader endpoint · JSON. Route and parameters require upstream verification.",
-          "path": "/api/teddy/downloader/youtube-downloader",
+          "path": "/api/teddyai/downloader/youtube-downloader",
           "params": [],
           "methods": [
             "GET"
@@ -655,7 +655,7 @@ module.exports = [
       {
         "Universal Downloader": {
           "desc": "TEDDY-TECH Downloader endpoint · JSON. Route and parameters require upstream verification.",
-          "path": "/api/teddy/downloader/universal-downloader",
+          "path": "/api/teddyai/downloader/universal-downloader",
           "params": [],
           "methods": [
             "GET"
