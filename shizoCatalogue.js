@@ -515,7 +515,7 @@ module.exports = [
           ],
           "provider": "TEDDY-TECH",
           "verified": true,
-          "upstreamPath": "/quote/gnsd"
+          "upstreamPath": "/quote/quotes"
         }
       },
       {
@@ -585,14 +585,15 @@ module.exports = [
       },
       {
         "Sweet Night Texts": {
-          "desc": "TEDDY-TECH Quote endpoint · JSON. Route and parameters require upstream verification.",
+          "desc": "Returns a sweet good-night text. No additional input is required.",
           "path": "/api/teddyai/quote/sweet-night-texts",
           "params": [],
           "methods": [
             "GET"
           ],
           "provider": "TEDDY-TECH",
-          "verified": false
+          "verified": true,
+          "upstreamPath": "/quote/gnsd"
         }
       }
     ]
