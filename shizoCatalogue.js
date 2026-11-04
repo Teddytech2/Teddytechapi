@@ -621,7 +621,7 @@ module.exports = [
       },
       {
         "Bit.ly Short URL": {
-          "desc": "TEDDY-TECH Tools endpoint · JSON. Route and parameters require upstream verification.",
+          "desc": "Create a Bitly short link through the confirmed Shizo tools endpoint.",
           "path": "/api/teddyai/tools/bit-ly-short-url",
           "params": [
             {
@@ -634,12 +634,13 @@ module.exports = [
             "GET"
           ],
           "provider": "TEDDY-TECH",
-          "verified": false
+          "verified": true,
+          "upstreamPath": "/tools/bitlyshort"
         }
       },
       {
         "Tiny Short URL": {
-          "desc": "TEDDY-TECH Tools endpoint · JSON. Route and parameters require upstream verification.",
+          "desc": "Create a TinyURL short link through the confirmed Shizo tools endpoint.",
           "path": "/api/teddyai/tools/tiny-short-url",
           "params": [
             {
@@ -652,12 +653,13 @@ module.exports = [
             "GET"
           ],
           "provider": "TEDDY-TECH",
-          "verified": false
+          "verified": true,
+          "upstreamPath": "/tools/tinyshort"
         }
       },
       {
         "Screenshot Website": {
-          "desc": "TEDDY-TECH Tools endpoint · IMG. Route and parameters require upstream verification.",
+          "desc": "Capture a screenshot of a website through the confirmed Shizo tools endpoint.",
           "path": "/api/teddyai/tools/screenshot-website",
           "params": [
             {
@@ -670,12 +672,13 @@ module.exports = [
             "GET"
           ],
           "provider": "TEDDY-TECH",
-          "verified": false
+          "verified": true,
+          "upstreamPath": "/tools/ssweb"
         }
       },
       {
         "Remove Background": {
-          "desc": "TEDDY-TECH Tools endpoint · IMG. Route and parameters require upstream verification.",
+          "desc": "Remove the background from an image through the confirmed Shizo tools endpoint.",
           "path": "/api/teddyai/tools/remove-background",
           "params": [
             {
@@ -688,13 +691,14 @@ module.exports = [
             "GET"
           ],
           "provider": "TEDDY-TECH",
-          "verified": false
+          "verified": true,
+          "upstreamPath": "/tools/removebg"
         }
       },
       {
         "Search Meme": {
-          "desc": "Search for memes using the upstream service. Supply its supported search parameters; the API returns the upstream result.",
-          "path": "/api/teddyai/tools/search-meme",
+          "desc": "Search memes through the confirmed Shizo tools endpoint. Query parameters are forwarded to the upstream service.",
+          "path": "/api/teddyai/tools/meme-search",
           "params": [],
           "methods": [
             "GET"
@@ -706,8 +710,8 @@ module.exports = [
       },
       {
         "Forex Exchange": {
-          "desc": "Convert currencies using the upstream exchange service. Supply its supported currency and amount parameters.",
-          "path": "/api/teddyai/tools/forex-exchange",
+          "desc": "Convert currencies through the confirmed Shizo tools endpoint. Query parameters are forwarded to the upstream service.",
+          "path": "/api/teddyai/tools/currency-convert",
           "params": [],
           "methods": [
             "GET"
@@ -719,8 +723,8 @@ module.exports = [
       },
       {
         "IP Information": {
-          "desc": "Retrieve IP address information using the upstream service. Supply an IP address if required.",
-          "path": "/api/teddyai/tools/ip-information",
+          "desc": "Look up IP address information through the confirmed Shizo tools endpoint. Query parameters are forwarded to the upstream service.",
+          "path": "/api/teddyai/tools/ip-infp",
           "params": [],
           "methods": [
             "GET"
@@ -732,8 +736,8 @@ module.exports = [
       },
       {
         "Weather Info": {
-          "desc": "Retrieve weather information using the upstream service. Supply its supported location parameter.",
-          "path": "/api/teddyai/tools/weather-info",
+          "desc": "Retrieve weather information through the confirmed Shizo tools endpoint. Query parameters are forwarded to the upstream service.",
+          "path": "/api/teddyai/tools/weather",
           "params": [],
           "methods": [
             "GET"
@@ -745,8 +749,8 @@ module.exports = [
       },
       {
         "Domain WhoIs": {
-          "desc": "Retrieve domain registration and lookup information using the upstream service. Supply a domain if required.",
-          "path": "/api/teddyai/tools/domain-whois",
+          "desc": "Check domain information through the confirmed Shizo tools endpoint. Query parameters are forwarded to the upstream service.",
+          "path": "/api/teddyai/tools/domain-check",
           "params": [],
           "methods": [
             "GET"
