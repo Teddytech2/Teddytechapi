@@ -520,14 +520,15 @@ module.exports = [
       },
       {
         "Truth (Question)": {
-          "desc": "TEDDY-TECH Quote endpoint · JSON. Route and parameters require upstream verification.",
+          "desc": "Returns a truth question prompt. No additional input is required.",
           "path": "/api/teddyai/quote/truth-question",
           "params": [],
           "methods": [
             "GET"
           ],
           "provider": "TEDDY-TECH",
-          "verified": false
+          "verified": true,
+          "upstreamPath": "/quote/truth"
         }
       },
       {

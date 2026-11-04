@@ -149,6 +149,7 @@ const SHIZO_CONFIRMED_ROUTES = {
     "/pies/thailand": "/pies/thailand",
     "/pies/vietnam": "/pies/vietnam",
     "/quote/motivational-quotes": "/quote/gnsd",
+    "/quote/truth-question": "/quote/truth",
     "/quote/dare-task": "/quote/dare",
     "/quote/flirts-english": "/quote/flirt-en",
     "/quote/flirts-hindi": "/quote/flirt",
