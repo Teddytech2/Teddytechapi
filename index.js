@@ -110,8 +110,46 @@ logger.info('Starting server initialization...');
 logger.info('Loading API endpoints...');
 const allEndpoints = loadEndpointsFromDirectory('api');
 
+// Register TEDDY-branded public routes before Neosoft's broad /api/* proxy.
+// Public paths use /api/teddy/... while requests are forwarded to Shizo's
+// native /api/... route namespace upstream.
+const shizoConfig = require('./config').providers.shizo;
+const axios = require('axios');
+app.all('/api/teddy/*', async (req, res) => {
+    const suffix = req.path.replace(/^\/api\/teddy(?=\/|$)/, '');
+    const upstreamPath = `/api${suffix.startsWith('/') ? suffix : `/${suffix}`}`;
+    try {
+        const upstream = await axios({
+            method: req.method,
+            url: `${shizoConfig.baseUrl}${upstreamPath}`,
+            params: req.query,
+            data: ['POST', 'PUT', 'PATCH', 'DELETE'].includes(req.method) ? req.body : undefined,
+            timeout: 60000,
+            responseType: 'arraybuffer',
+            validateStatus: () => true,
+            headers: {
+                'User-Agent': 'TEDDY-TECH-API/4.0',
+                [shizoConfig.authHeader || 'X-API-Key']: shizoConfig.apiKey,
+                ...(req.headers['content-type'] ? { 'Content-Type': req.headers['content-type'] } : {})
+            },
+            maxContentLength: 25 * 1024 * 1024,
+            maxBodyLength: 25 * 1024 * 1024
+        });
+        res.status(upstream.status);
+        res.setHeader('Content-Type', upstream.headers['content-type'] || 'application/json; charset=utf-8');
+        for (const header of ['cache-control', 'content-disposition']) {
+            if (upstream.headers[header]) res.setHeader(header, upstream.headers[header]);
+        }
+        return res.send(Buffer.from(upstream.data));
+    } catch (error) {
+        logger.warn(`TEDDY provider request failed: ${error.message}`);
+        return res.status(502).json({ status: false, creator: 'Teddy Tech', message: 'This endpoint is temporarily unavailable.' });
+    }
+});
+
 // Add Neosoft AI, image, search, Pixiv, profile and utility endpoints.
-// Requests are allow-listed against Neosoft's published manifest.
+// The TEDDY route handler above owns /api/teddy/*, so these requests cannot
+// fall through to Neosoft's manifest matcher.
 const neosoftCatalogue = require('./neosoftProxy').register(app, allEndpoints);
 const shizoCatalogue = require('./shizoCatalogue');
 
