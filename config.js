@@ -10,9 +10,8 @@ module.exports = Object.freeze({
         shizo: Object.freeze({
             baseUrl: 'https://api.shizo.top',
             apiKey: 'shizo',
-            // Set this only to the exact auth header/query field documented by Shizo.
-            // The key is configured here, but its transport must not be guessed.
-            authHeader: 'X-API-Key'
+            // Shizo confirms authentication through the `apikey` query parameter.
+            authQuery: 'apikey'
         }),
         neosoft: Object.freeze({
             baseUrl: 'https://api.neosoft.best'

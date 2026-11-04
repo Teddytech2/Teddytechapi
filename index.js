@@ -110,18 +110,30 @@ logger.info('Starting server initialization...');
 logger.info('Loading API endpoints...');
 const allEndpoints = loadEndpointsFromDirectory('api');
 
-// Register TEDDY-branded public routes before Neosoft's broad /api/* proxy.
-// Public namespace is /api/teddyai/*; upstream retains its native /api/* paths.
+// Register TEDDY-branded routes for Shizo. The public namespace is
+// /api/teddyai/*, while Shizo uses native paths without an /api prefix.
 const shizoConfig = require('./config').providers.shizo;
 const axios = require('axios');
+
+function getShizoUpstreamPath(publicSuffix) {
+    const suffix = publicSuffix.startsWith('/') ? publicSuffix : `/${publicSuffix}`;
+    // This is the one route confirmed by the user's successful live request.
+    if (/^\/ai\/chatgpt\/?$/.test(suffix)) return '/ai/gpt';
+    return suffix;
+}
+
 async function handleTeddyProvider(req, res, upstreamPath) {
     try {
         const query = { ...req.query };
-        // Public ChatGPT tester uses `prompt`; upstream expects `text`.
-        if (/\/ai\/chatgpt\/?$/.test(upstreamPath) && query.prompt && !query.text) {
-            query.text = query.prompt;
+        // The public tester calls its input `prompt`; Shizo expects `query`.
+        if (upstreamPath === '/ai/gpt') {
+            if (query.prompt && !query.query) query.query = query.prompt;
+            delete query.prompt;
         }
-        delete query.prompt;
+        // Never allow a caller to override the server-configured provider key.
+        delete query[shizoConfig.authQuery || 'apikey'];
+        query[shizoConfig.authQuery || 'apikey'] = shizoConfig.apiKey;
+
         const upstream = await axios({
             method: req.method,
             url: `${shizoConfig.baseUrl}${upstreamPath}`,
@@ -132,7 +144,6 @@ async function handleTeddyProvider(req, res, upstreamPath) {
             validateStatus: () => true,
             headers: {
                 'User-Agent': 'TEDDY-TECH-API/4.0',
-                [shizoConfig.authHeader || 'X-API-Key']: shizoConfig.apiKey,
                 ...(req.headers['content-type'] ? { 'Content-Type': req.headers['content-type'] } : {})
             },
             maxContentLength: 25 * 1024 * 1024,
@@ -149,19 +160,19 @@ async function handleTeddyProvider(req, res, upstreamPath) {
         return res.status(502).json({ status: false, creator: 'Teddy Tech', message: 'This endpoint is temporarily unavailable.' });
     }
 }
+
 function registerTeddyRoute(publicPrefix) {
     app.all(`${publicPrefix}/*`, (req, res) => {
-        const suffix = req.path.replace(new RegExp(`^${publicPrefix}(?=/|$)`), '');
-        const upstreamPath = `/api${suffix.startsWith('/') ? suffix : `/${suffix}`}`;
-        return handleTeddyProvider(req, res, upstreamPath);
+        const suffix = req.path.slice(publicPrefix.length) || '/';
+        return handleTeddyProvider(req, res, getShizoUpstreamPath(suffix));
     });
 }
 registerTeddyRoute('/api/teddyai');
 // Keep the previous public namespace working as a backward-compatible alias.
 registerTeddyRoute('/api/teddy');
 // Older unprefixed AI aliases remain available for compatibility.
-app.all('/api/ai/chatgpt', (req, res) => handleTeddyProvider(req, res, '/api/ai/chatgpt'));
-app.all('/api/ai/*', (req, res) => handleTeddyProvider(req, res, req.path));
+app.all('/api/ai/chatgpt', (req, res) => handleTeddyProvider(req, res, '/ai/gpt'));
+app.all('/api/ai/*', (req, res) => handleTeddyProvider(req, res, req.path.replace(/^\/api(?=\/)/, '')));
 
 // Add Neosoft AI, image, search, Pixiv, profile and utility endpoints.
 // The TEDDY route handler above owns /api/teddyai/*, so these requests cannot

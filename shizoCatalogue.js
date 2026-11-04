@@ -1,6 +1,6 @@
 'use strict';
 
-// User-confirmed TEDDY-TECH display catalogue. Route slugs are provisional until Shizo publishes route metadata.
+// TEDDY-TECH public catalogue. ChatGPT is mapped to the confirmed Shizo /ai/gpt route; other slugs remain pending upstream verification.
 module.exports = [
   {
     "name": "TEDDY · AI",
@@ -14,7 +14,7 @@ module.exports = [
             "GET"
           ],
           "provider": "TEDDY-TECH",
-          "verified": false
+          "verified": true
         }
       },
       {
