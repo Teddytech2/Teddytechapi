@@ -115,13 +115,56 @@ const allEndpoints = loadEndpointsFromDirectory('api');
 const shizoConfig = require('./config').providers.shizo;
 const axios = require('axios');
 
+const SHIZO_CONFIRMED_ROUTES = {
+    "/ai/chatgpt": "/ai/gpt",
+    "/ai/dall-e-imagine": "/ai/imagine/realism",
+    "/ai/ai-image-upscaler": "/ai/upscale",
+    "/ai/ai-image-enhancer": "/ai/enhance",
+    "/ai/ai-image-sharpener": "/ai/sharpen",
+    "/cosplay/genshin-impact/asuma": "/cosplay/genshin-impact/asuma",
+    "/cosplay/genshin-impact/ayaka-kamisato": "/cosplay/genshin-impact/ayaka-kamisato",
+    "/cosplay/genshin-impact/furina": "/cosplay/genshin-impact/furina",
+    "/cosplay/genshin-impact/yaemiko": "/cosplay/genshin-impact/yaemiko",
+    "/cosplay/genshin-impact/nahida": "/cosplay/genshin-impact/nahida",
+    "/cosplay/genshin-impact/kurumi-tokisaki": "/cosplay/genshin-impact/kurumi-tokisaki",
+    "/cosplay/genshin-impact/ganyu-succubus": "/cosplay/genshin-impact/ganyu-succubus",
+    "/games/cards-premium": "/games/card",
+    "/games/guess-app-name": "/games/gta",
+    "/games/guess-song-lyrics": "/games/gtl",
+    "/games/guess-the-words": "/games/gtw",
+    "/games/emoji-riddles": "/games/emoji-riddle",
+    "/fanart/annie": "/fanart/annie",
+    "/fanart/mikasa": "/fanart/mikasa",
+    "/fanart/nami": "/fanart/nami",
+    "/fanart/sakura": "/fanart/sakura",
+    "/fanart/sasha": "/fanart/sasha",
+    "/sfw/husby": "/sfw/husbu",
+    "/sfw/loli": "/sfw/loli",
+    "/sfw/neko": "/sfw/neko",
+    "/sfw/shota": "/sfw/shota",
+    "/sfw/waifu": "/sfw/waifu",
+    "/pies/japanese-pies": "/pies/japan",
+    "/pies/korean-pies": "/pies/korea",
+    "/pies/malaysian-pies": "/pies/malaysia",
+    "/pies/thailand-pies": "/pies/thailand",
+    "/pies/vietnamese-pies": "/pies/vietnam",
+    "/quote/motivational-quotes": "/quote/gnsd",
+    "/quote/dare-task": "/quote/dare",
+    "/quote/flirts-english": "/quote/flirt-en",
+    "/quote/flirts-hindi": "/quote/flirt",
+    "/quote/shayari-hindi": "/quote/shayar",
+    "/tools/search-meme": "/tools/meme-search",
+    "/tools/forex-exchange": "/tools/currency-convert",
+    "/tools/ip-information": "/tools/ip-infp",
+    "/tools/weather-info": "/tools/weather",
+    "/tools/domain-whois": "/tools/domain-check"
+};
+
 function getShizoUpstreamCandidates(publicSuffix) {
     const suffix = (publicSuffix.startsWith('/') ? publicSuffix : `/${publicSuffix}`).replace(/\/+$/, '') || '/';
-    if (suffix === '/ai/chatgpt' || suffix === '/ai/gpt') return ['/ai/gpt'];
-
-    // The public catalogue is organized by category/name. Try the native
-    // category/name route first, then common Shizo route layouts. This keeps
-    // every supplied catalogue item callable without hard-coding 51 guesses.
+    // Exact routes supplied by the user take precedence; never guess aliases for them.
+    if (SHIZO_CONFIRMED_ROUTES[suffix]) return [SHIZO_CONFIRMED_ROUTES[suffix]];
+    // Backward compatibility for catalogue entries whose native paths are not yet confirmed.
     const parts = suffix.split('/').filter(Boolean);
     const category = parts[0] || '';
     const slug = parts.slice(1).join('/') || '';
@@ -130,7 +173,7 @@ function getShizoUpstreamCandidates(publicSuffix) {
         candidates.push(`/${category}/${slug.replace(/-/g, '')}`);
         candidates.push(`/${category}/${slug.replace(/-/g, '_')}`);
         candidates.push(`/${slug}`);
-        candidates.push(`/api${suffix}`); // compatibility with providers using an /api prefix
+        candidates.push(`/api${suffix}`);
     }
     return [...new Set(candidates)];
 }

@@ -1,15 +1,92 @@
 'use strict';
 
-// TEDDY-TECH public catalogue. All supplied Shizo endpoint names are exposed through one authenticated proxy. ChatGPT has a confirmed native route; other route aliases are resolved by the proxy.
+// TEDDY-TECH public catalogue. Confirmed upstream paths are explicit; unconfirmed entries remain provisional.
 module.exports = [
   {
     "name": "TEDDY · AI",
     "items": [
       {
         "ChatGPT": {
-          "desc": "Send a prompt to ChatGPT and receive a JSON response. Enter your prompt in the Test Endpoint form.",
+          "desc": "Send a prompt to ChatGPT and receive a JSON response.",
           "path": "/api/teddyai/ai/chatgpt?prompt=",
-          "params": [{"name":"prompt","required":true,"description":"Enter the message you want ChatGPT to answer"}],
+          "params": [
+            {
+              "name": "prompt",
+              "required": true,
+              "description": "Enter the message you want ChatGPT to answer"
+            }
+          ],
+          "methods": [
+            "GET"
+          ],
+          "provider": "TEDDY-TECH",
+          "verified": true,
+          "upstreamPath": "/ai/gpt"
+        }
+      },
+      {
+        "Dall E Imagine": {
+          "desc": "Confirmed Shizo upstream route. Input parameters have not been specified.",
+          "path": "/api/teddyai/ai/dall-e-imagine",
+          "params": [],
+          "methods": [
+            "GET"
+          ],
+          "provider": "TEDDY-TECH",
+          "verified": true,
+          "upstreamPath": "/ai/imagine/realism"
+        }
+      },
+      {
+        "AI Image Upscaler": {
+          "desc": "Confirmed Shizo upstream route. Input parameters have not been specified.",
+          "path": "/api/teddyai/ai/ai-image-upscaler",
+          "params": [],
+          "methods": [
+            "GET"
+          ],
+          "provider": "TEDDY-TECH",
+          "verified": true,
+          "upstreamPath": "/ai/upscale"
+        }
+      },
+      {
+        "AI Image Enhancer": {
+          "desc": "Confirmed Shizo upstream route. Input parameters have not been specified.",
+          "path": "/api/teddyai/ai/ai-image-enhancer",
+          "params": [],
+          "methods": [
+            "GET"
+          ],
+          "provider": "TEDDY-TECH",
+          "verified": true,
+          "upstreamPath": "/ai/enhance"
+        }
+      },
+      {
+        "AI Image Sharpener": {
+          "desc": "Confirmed Shizo upstream route. Input parameters have not been specified.",
+          "path": "/api/teddyai/ai/ai-image-sharpener",
+          "params": [],
+          "methods": [
+            "GET"
+          ],
+          "provider": "TEDDY-TECH",
+          "verified": true,
+          "upstreamPath": "/ai/sharpen"
+        }
+      }
+    ]
+  },
+  {
+    "name": "TEDDY · Cosplay",
+    "items": [
+      {
+        "Asuma": {
+          "desc": "Confirmed Shizo Cosplay route. Input parameters have not been specified.",
+          "path": "/api/teddyai/cosplay/genshin-impact/asuma",
+          "upstreamPath": "/cosplay/genshin-impact/asuma",
+          "params": [],
           "methods": [
             "GET"
           ],
@@ -18,51 +95,81 @@ module.exports = [
         }
       },
       {
-        "Dall E Imagine": {
-          "desc": "TEDDY-TECH AI endpoint · IMG. Route and parameters require upstream verification.",
-          "path": "/api/teddyai/ai/dall-e-imagine",
-          "params": [{"name":"url","required":true,"description":"Image URL"}],
+        "Ayaka Kamisato": {
+          "desc": "Confirmed Shizo Cosplay route. Input parameters have not been specified.",
+          "path": "/api/teddyai/cosplay/genshin-impact/ayaka-kamisato",
+          "upstreamPath": "/cosplay/genshin-impact/ayaka-kamisato",
+          "params": [],
           "methods": [
             "GET"
           ],
           "provider": "TEDDY-TECH",
-          "verified": false
+          "verified": true
         }
       },
       {
-        "AI Image Upscaler": {
-          "desc": "TEDDY-TECH AI endpoint · JSON. Route and parameters require upstream verification.",
-          "path": "/api/teddyai/ai/ai-image-upscaler",
-          "params": [{"name":"url","required":true,"description":"Image URL"}],
+        "Furina": {
+          "desc": "Confirmed Shizo Cosplay route. Input parameters have not been specified.",
+          "path": "/api/teddyai/cosplay/genshin-impact/furina",
+          "upstreamPath": "/cosplay/genshin-impact/furina",
+          "params": [],
           "methods": [
             "GET"
           ],
           "provider": "TEDDY-TECH",
-          "verified": false
+          "verified": true
         }
       },
       {
-        "AI Image Enhancer": {
-          "desc": "TEDDY-TECH AI endpoint · JSON. Route and parameters require upstream verification.",
-          "path": "/api/teddyai/ai/ai-image-enhancer",
-          "params": [{"name":"url","required":true,"description":"Image URL"}],
+        "Yae Miko": {
+          "desc": "Confirmed Shizo Cosplay route. Input parameters have not been specified.",
+          "path": "/api/teddyai/cosplay/genshin-impact/yaemiko",
+          "upstreamPath": "/cosplay/genshin-impact/yaemiko",
+          "params": [],
           "methods": [
             "GET"
           ],
           "provider": "TEDDY-TECH",
-          "verified": false
+          "verified": true
         }
       },
       {
-        "AI Image Sharpener": {
-          "desc": "TEDDY-TECH AI endpoint · JSON. Route and parameters require upstream verification.",
-          "path": "/api/teddyai/ai/ai-image-sharpener",
-          "params": [{"name":"url","required":true,"description":"Image URL"}],
+        "Nahida": {
+          "desc": "Confirmed Shizo Cosplay route. Input parameters have not been specified.",
+          "path": "/api/teddyai/cosplay/genshin-impact/nahida",
+          "upstreamPath": "/cosplay/genshin-impact/nahida",
+          "params": [],
           "methods": [
             "GET"
           ],
           "provider": "TEDDY-TECH",
-          "verified": false
+          "verified": true
+        }
+      },
+      {
+        "Kurumi Tokisaki": {
+          "desc": "Confirmed Shizo Cosplay route. Input parameters have not been specified.",
+          "path": "/api/teddyai/cosplay/genshin-impact/kurumi-tokisaki",
+          "upstreamPath": "/cosplay/genshin-impact/kurumi-tokisaki",
+          "params": [],
+          "methods": [
+            "GET"
+          ],
+          "provider": "TEDDY-TECH",
+          "verified": true
+        }
+      },
+      {
+        "Ganyu Succubus": {
+          "desc": "Confirmed Shizo Cosplay route. Input parameters have not been specified.",
+          "path": "/api/teddyai/cosplay/genshin-impact/ganyu-succubus",
+          "upstreamPath": "/cosplay/genshin-impact/ganyu-succubus",
+          "params": [],
+          "methods": [
+            "GET"
+          ],
+          "provider": "TEDDY-TECH",
+          "verified": true
         }
       }
     ]
@@ -72,62 +179,67 @@ module.exports = [
     "items": [
       {
         "Cards (premium)": {
-          "desc": "TEDDY-TECH Games endpoint · JSON. Route and parameters require upstream verification.",
+          "desc": "Confirmed Shizo upstream route. Input parameters have not been specified.",
           "path": "/api/teddyai/games/cards-premium",
           "params": [],
           "methods": [
             "GET"
           ],
           "provider": "TEDDY-TECH",
-          "verified": false
+          "verified": true,
+          "upstreamPath": "/games/card"
         }
       },
       {
         "Guess App Name": {
-          "desc": "TEDDY-TECH Games endpoint · JSON. Route and parameters require upstream verification.",
+          "desc": "Confirmed Shizo upstream route. Input parameters have not been specified.",
           "path": "/api/teddyai/games/guess-app-name",
           "params": [],
           "methods": [
             "GET"
           ],
           "provider": "TEDDY-TECH",
-          "verified": false
+          "verified": true,
+          "upstreamPath": "/games/gta"
         }
       },
       {
         "Guess Song Lyrics": {
-          "desc": "TEDDY-TECH Games endpoint · JSON. Route and parameters require upstream verification.",
+          "desc": "Confirmed Shizo upstream route. Input parameters have not been specified.",
           "path": "/api/teddyai/games/guess-song-lyrics",
           "params": [],
           "methods": [
             "GET"
           ],
           "provider": "TEDDY-TECH",
-          "verified": false
+          "verified": true,
+          "upstreamPath": "/games/gtl"
         }
       },
       {
         "Guess The Words": {
-          "desc": "TEDDY-TECH Games endpoint · JSON. Route and parameters require upstream verification.",
+          "desc": "Confirmed Shizo upstream route. Input parameters have not been specified.",
           "path": "/api/teddyai/games/guess-the-words",
           "params": [],
           "methods": [
             "GET"
           ],
           "provider": "TEDDY-TECH",
-          "verified": false
+          "verified": true,
+          "upstreamPath": "/games/gtw"
         }
       },
       {
         "Emoji Riddles": {
-          "desc": "TEDDY-TECH Games endpoint · JSON. Route and parameters require upstream verification.",
+          "desc": "Confirmed Shizo upstream route. Input parameters have not been specified.",
           "path": "/api/teddyai/games/emoji-riddles",
           "params": [],
           "methods": [
             "GET"
           ],
           "provider": "TEDDY-TECH",
-          "verified": false
+          "verified": true,
+          "upstreamPath": "/games/emoji-riddle"
         }
       }
     ]
@@ -137,62 +249,67 @@ module.exports = [
     "items": [
       {
         "Annie": {
-          "desc": "TEDDY-TECH Fanart endpoint · IMG. Route and parameters require upstream verification.",
+          "desc": "Confirmed Shizo upstream route. Input parameters have not been specified.",
           "path": "/api/teddyai/fanart/annie",
           "params": [],
           "methods": [
             "GET"
           ],
           "provider": "TEDDY-TECH",
-          "verified": false
+          "verified": true,
+          "upstreamPath": "/fanart/annie"
         }
       },
       {
         "Mikasa": {
-          "desc": "TEDDY-TECH Fanart endpoint · IMG. Route and parameters require upstream verification.",
+          "desc": "Confirmed Shizo upstream route. Input parameters have not been specified.",
           "path": "/api/teddyai/fanart/mikasa",
           "params": [],
           "methods": [
             "GET"
           ],
           "provider": "TEDDY-TECH",
-          "verified": false
+          "verified": true,
+          "upstreamPath": "/fanart/mikasa"
         }
       },
       {
         "Nami": {
-          "desc": "TEDDY-TECH Fanart endpoint · IMG. Route and parameters require upstream verification.",
+          "desc": "Confirmed Shizo upstream route. Input parameters have not been specified.",
           "path": "/api/teddyai/fanart/nami",
           "params": [],
           "methods": [
             "GET"
           ],
           "provider": "TEDDY-TECH",
-          "verified": false
+          "verified": true,
+          "upstreamPath": "/fanart/nami"
         }
       },
       {
         "Sakura": {
-          "desc": "TEDDY-TECH Fanart endpoint · IMG. Route and parameters require upstream verification.",
+          "desc": "Confirmed Shizo upstream route. Input parameters have not been specified.",
           "path": "/api/teddyai/fanart/sakura",
           "params": [],
           "methods": [
             "GET"
           ],
           "provider": "TEDDY-TECH",
-          "verified": false
+          "verified": true,
+          "upstreamPath": "/fanart/sakura"
         }
       },
       {
         "Sasha": {
-          "desc": "TEDDY-TECH Fanart endpoint · IMG. Route and parameters require upstream verification.",
+          "desc": "Confirmed Shizo upstream route. Input parameters have not been specified.",
           "path": "/api/teddyai/fanart/sasha",
           "params": [],
           "methods": [
             "GET"
           ],
           "provider": "TEDDY-TECH",
-          "verified": false
+          "verified": true,
+          "upstreamPath": "/fanart/sasha"
         }
       },
       {
@@ -213,63 +330,68 @@ module.exports = [
     "name": "TEDDY · SFW",
     "items": [
       {
-        "Husby": {
-          "desc": "TEDDY-TECH SFW endpoint · IMG. Route and parameters require upstream verification.",
+        "Husbu": {
+          "desc": "Confirmed Shizo upstream route. Input parameters have not been specified.",
           "path": "/api/teddyai/sfw/husby",
           "params": [],
           "methods": [
             "GET"
           ],
           "provider": "TEDDY-TECH",
-          "verified": false
+          "verified": true,
+          "upstreamPath": "/sfw/husbu"
         }
       },
       {
         "Loli": {
-          "desc": "TEDDY-TECH SFW endpoint · IMG. Route and parameters require upstream verification.",
+          "desc": "Confirmed Shizo upstream route. Input parameters have not been specified.",
           "path": "/api/teddyai/sfw/loli",
           "params": [],
           "methods": [
             "GET"
           ],
           "provider": "TEDDY-TECH",
-          "verified": false
+          "verified": true,
+          "upstreamPath": "/sfw/loli"
         }
       },
       {
         "Neko": {
-          "desc": "TEDDY-TECH SFW endpoint · IMG. Route and parameters require upstream verification.",
+          "desc": "Confirmed Shizo upstream route. Input parameters have not been specified.",
           "path": "/api/teddyai/sfw/neko",
           "params": [],
           "methods": [
             "GET"
           ],
           "provider": "TEDDY-TECH",
-          "verified": false
+          "verified": true,
+          "upstreamPath": "/sfw/neko"
         }
       },
       {
         "Shota": {
-          "desc": "TEDDY-TECH SFW endpoint · IMG. Route and parameters require upstream verification.",
+          "desc": "Confirmed Shizo upstream route. Input parameters have not been specified.",
           "path": "/api/teddyai/sfw/shota",
           "params": [],
           "methods": [
             "GET"
           ],
           "provider": "TEDDY-TECH",
-          "verified": false
+          "verified": true,
+          "upstreamPath": "/sfw/shota"
         }
       },
       {
         "Waifu": {
-          "desc": "TEDDY-TECH SFW endpoint · IMG. Route and parameters require upstream verification.",
+          "desc": "Confirmed Shizo upstream route. Input parameters have not been specified.",
           "path": "/api/teddyai/sfw/waifu",
           "params": [],
           "methods": [
             "GET"
           ],
           "provider": "TEDDY-TECH",
-          "verified": false
+          "verified": true,
+          "upstreamPath": "/sfw/waifu"
         }
       }
     ]
@@ -315,62 +437,67 @@ module.exports = [
       },
       {
         "Japanese Pies": {
-          "desc": "TEDDY-TECH Pies endpoint · IMG. Route and parameters require upstream verification.",
+          "desc": "Confirmed Shizo upstream route. Input parameters have not been specified.",
           "path": "/api/teddyai/pies/japanese-pies",
           "params": [],
           "methods": [
             "GET"
           ],
           "provider": "TEDDY-TECH",
-          "verified": false
+          "verified": true,
+          "upstreamPath": "/pies/japan"
         }
       },
       {
         "Korean Pies": {
-          "desc": "TEDDY-TECH Pies endpoint · IMG. Route and parameters require upstream verification.",
+          "desc": "Confirmed Shizo upstream route. Input parameters have not been specified.",
           "path": "/api/teddyai/pies/korean-pies",
           "params": [],
           "methods": [
             "GET"
           ],
           "provider": "TEDDY-TECH",
-          "verified": false
+          "verified": true,
+          "upstreamPath": "/pies/korea"
         }
       },
       {
         "Malaysian Pies": {
-          "desc": "TEDDY-TECH Pies endpoint · IMG. Route and parameters require upstream verification.",
+          "desc": "Confirmed Shizo upstream route. Input parameters have not been specified.",
           "path": "/api/teddyai/pies/malaysian-pies",
           "params": [],
           "methods": [
             "GET"
           ],
           "provider": "TEDDY-TECH",
-          "verified": false
+          "verified": true,
+          "upstreamPath": "/pies/malaysia"
         }
       },
       {
         "Thailand Pies": {
-          "desc": "TEDDY-TECH Pies endpoint · IMG. Route and parameters require upstream verification.",
+          "desc": "Confirmed Shizo upstream route. Input parameters have not been specified.",
           "path": "/api/teddyai/pies/thailand-pies",
           "params": [],
           "methods": [
             "GET"
           ],
           "provider": "TEDDY-TECH",
-          "verified": false
+          "verified": true,
+          "upstreamPath": "/pies/thailand"
         }
       },
       {
         "Vietnamese Pies": {
-          "desc": "TEDDY-TECH Pies endpoint · IMG. Route and parameters require upstream verification.",
+          "desc": "Confirmed Shizo upstream route. Input parameters have not been specified.",
           "path": "/api/teddyai/pies/vietnamese-pies",
           "params": [],
           "methods": [
             "GET"
           ],
           "provider": "TEDDY-TECH",
-          "verified": false
+          "verified": true,
+          "upstreamPath": "/pies/vietnam"
         }
       }
     ]
@@ -380,14 +507,15 @@ module.exports = [
     "items": [
       {
         "Motivational Quotes": {
-          "desc": "TEDDY-TECH Quote endpoint · JSON. Route and parameters require upstream verification.",
+          "desc": "Confirmed Shizo upstream route. Input parameters have not been specified.",
           "path": "/api/teddyai/quote/motivational-quotes",
           "params": [],
           "methods": [
             "GET"
           ],
           "provider": "TEDDY-TECH",
-          "verified": false
+          "verified": true,
+          "upstreamPath": "/quote/gnsd"
         }
       },
       {
@@ -404,50 +532,54 @@ module.exports = [
       },
       {
         "Dare (Task)": {
-          "desc": "TEDDY-TECH Quote endpoint · JSON. Route and parameters require upstream verification.",
+          "desc": "Confirmed Shizo upstream route. Input parameters have not been specified.",
           "path": "/api/teddyai/quote/dare-task",
           "params": [],
           "methods": [
             "GET"
           ],
           "provider": "TEDDY-TECH",
-          "verified": false
+          "verified": true,
+          "upstreamPath": "/quote/dare"
         }
       },
       {
         "Flirts (English)": {
-          "desc": "TEDDY-TECH Quote endpoint · JSON. Route and parameters require upstream verification.",
+          "desc": "Confirmed Shizo upstream route. Input parameters have not been specified.",
           "path": "/api/teddyai/quote/flirts-english",
           "params": [],
           "methods": [
             "GET"
           ],
           "provider": "TEDDY-TECH",
-          "verified": false
+          "verified": true,
+          "upstreamPath": "/quote/flirt-en"
         }
       },
       {
         "Flirts (Hindi)": {
-          "desc": "TEDDY-TECH Quote endpoint · JSON. Route and parameters require upstream verification.",
+          "desc": "Confirmed Shizo upstream route. Input parameters have not been specified.",
           "path": "/api/teddyai/quote/flirts-hindi",
           "params": [],
           "methods": [
             "GET"
           ],
           "provider": "TEDDY-TECH",
-          "verified": false
+          "verified": true,
+          "upstreamPath": "/quote/flirt"
         }
       },
       {
         "Shayari (Hindi)": {
-          "desc": "TEDDY-TECH Quote endpoint · JSON. Route and parameters require upstream verification.",
+          "desc": "Confirmed Shizo upstream route. Input parameters have not been specified.",
           "path": "/api/teddyai/quote/shayari-hindi",
           "params": [],
           "methods": [
             "GET"
           ],
           "provider": "TEDDY-TECH",
-          "verified": false
+          "verified": true,
+          "upstreamPath": "/quote/shayar"
         }
       },
       {
@@ -471,7 +603,13 @@ module.exports = [
         "S Links (Shizo URL)": {
           "desc": "TEDDY-TECH Tools endpoint · JSON. Route and parameters require upstream verification.",
           "path": "/api/teddyai/tools/s-links-shizo-url",
-          "params": [{"name":"url","required":true,"description":"Paste the URL"}],
+          "params": [
+            {
+              "name": "url",
+              "required": true,
+              "description": "Paste the URL"
+            }
+          ],
           "methods": [
             "GET"
           ],
@@ -483,7 +621,13 @@ module.exports = [
         "Bit.ly Short URL": {
           "desc": "TEDDY-TECH Tools endpoint · JSON. Route and parameters require upstream verification.",
           "path": "/api/teddyai/tools/bit-ly-short-url",
-          "params": [{"name":"url","required":true,"description":"Paste the URL"}],
+          "params": [
+            {
+              "name": "url",
+              "required": true,
+              "description": "Paste the URL"
+            }
+          ],
           "methods": [
             "GET"
           ],
@@ -495,7 +639,13 @@ module.exports = [
         "Tiny Short URL": {
           "desc": "TEDDY-TECH Tools endpoint · JSON. Route and parameters require upstream verification.",
           "path": "/api/teddyai/tools/tiny-short-url",
-          "params": [{"name":"url","required":true,"description":"Paste the URL"}],
+          "params": [
+            {
+              "name": "url",
+              "required": true,
+              "description": "Paste the URL"
+            }
+          ],
           "methods": [
             "GET"
           ],
@@ -507,7 +657,13 @@ module.exports = [
         "Screenshot Website": {
           "desc": "TEDDY-TECH Tools endpoint · IMG. Route and parameters require upstream verification.",
           "path": "/api/teddyai/tools/screenshot-website",
-          "params": [{"name":"url","required":true,"description":"Paste the URL"}],
+          "params": [
+            {
+              "name": "url",
+              "required": true,
+              "description": "Paste the URL"
+            }
+          ],
           "methods": [
             "GET"
           ],
@@ -519,7 +675,13 @@ module.exports = [
         "Remove Background": {
           "desc": "TEDDY-TECH Tools endpoint · IMG. Route and parameters require upstream verification.",
           "path": "/api/teddyai/tools/remove-background",
-          "params": [{"name":"url","required":true,"description":"Paste the URL"}],
+          "params": [
+            {
+              "name": "url",
+              "required": true,
+              "description": "Paste the URL"
+            }
+          ],
           "methods": [
             "GET"
           ],
@@ -529,62 +691,67 @@ module.exports = [
       },
       {
         "Search Meme": {
-          "desc": "TEDDY-TECH Tools endpoint · IMG. Route and parameters require upstream verification.",
+          "desc": "Confirmed Shizo upstream route. Input parameters have not been specified.",
           "path": "/api/teddyai/tools/search-meme",
-          "params": [{"name":"query","required":true,"description":"Enter a search term or value"}],
+          "params": [],
           "methods": [
             "GET"
           ],
           "provider": "TEDDY-TECH",
-          "verified": false
+          "verified": true,
+          "upstreamPath": "/tools/meme-search"
         }
       },
       {
         "Forex Exchange": {
-          "desc": "TEDDY-TECH Tools endpoint · JSON. Route and parameters require upstream verification.",
+          "desc": "Confirmed Shizo upstream route. Input parameters have not been specified.",
           "path": "/api/teddyai/tools/forex-exchange",
-          "params": [{"name":"query","required":true,"description":"Enter currency pair or currency code"}],
+          "params": [],
           "methods": [
             "GET"
           ],
           "provider": "TEDDY-TECH",
-          "verified": false
+          "verified": true,
+          "upstreamPath": "/tools/currency-convert"
         }
       },
       {
         "IP Information": {
-          "desc": "TEDDY-TECH Tools endpoint · JSON. Route and parameters require upstream verification.",
+          "desc": "Confirmed Shizo upstream route. Input parameters have not been specified.",
           "path": "/api/teddyai/tools/ip-information",
-          "params": [{"name":"query","required":true,"description":"Enter an IP address"}],
+          "params": [],
           "methods": [
             "GET"
           ],
           "provider": "TEDDY-TECH",
-          "verified": false
+          "verified": true,
+          "upstreamPath": "/tools/ip-infp"
         }
       },
       {
         "Weather Info": {
-          "desc": "TEDDY-TECH Tools endpoint · JSON. Route and parameters require upstream verification.",
+          "desc": "Confirmed Shizo upstream route. Input parameters have not been specified.",
           "path": "/api/teddyai/tools/weather-info",
-          "params": [{"name":"query","required":true,"description":"Enter a city or location"}],
+          "params": [],
           "methods": [
             "GET"
           ],
           "provider": "TEDDY-TECH",
-          "verified": false
+          "verified": true,
+          "upstreamPath": "/tools/weather"
         }
       },
       {
         "Domain WhoIs": {
-          "desc": "TEDDY-TECH Tools endpoint · JSON. Route and parameters require upstream verification.",
+          "desc": "Confirmed Shizo upstream route. Input parameters have not been specified.",
           "path": "/api/teddyai/tools/domain-whois",
-          "params": [{"name":"query","required":true,"description":"Enter a domain name"}],
+          "params": [],
           "methods": [
             "GET"
           ],
           "provider": "TEDDY-TECH",
-          "verified": false
+          "verified": true,
+          "upstreamPath": "/tools/domain-check"
         }
       }
     ]
@@ -596,7 +763,13 @@ module.exports = [
         "Facebook Downloader": {
           "desc": "TEDDY-TECH Downloader endpoint · JSON. Route and parameters require upstream verification.",
           "path": "/api/teddyai/downloader/facebook-downloader",
-          "params": [{"name":"url","required":true,"description":"Paste the media URL"}],
+          "params": [
+            {
+              "name": "url",
+              "required": true,
+              "description": "Paste the media URL"
+            }
+          ],
           "methods": [
             "GET"
           ],
@@ -608,7 +781,13 @@ module.exports = [
         "Instagram Downloader": {
           "desc": "TEDDY-TECH Downloader endpoint · JSON. Route and parameters require upstream verification.",
           "path": "/api/teddyai/downloader/instagram-downloader",
-          "params": [{"name":"url","required":true,"description":"Paste the media URL"}],
+          "params": [
+            {
+              "name": "url",
+              "required": true,
+              "description": "Paste the media URL"
+            }
+          ],
           "methods": [
             "GET"
           ],
@@ -620,7 +799,13 @@ module.exports = [
         "TikTok Downloader": {
           "desc": "TEDDY-TECH Downloader endpoint · JSON. Route and parameters require upstream verification.",
           "path": "/api/teddyai/downloader/tiktok-downloader",
-          "params": [{"name":"url","required":true,"description":"Paste the media URL"}],
+          "params": [
+            {
+              "name": "url",
+              "required": true,
+              "description": "Paste the media URL"
+            }
+          ],
           "methods": [
             "GET"
           ],
@@ -632,7 +817,13 @@ module.exports = [
         "Twitter/X Downloader": {
           "desc": "TEDDY-TECH Downloader endpoint · JSON. Route and parameters require upstream verification.",
           "path": "/api/teddyai/downloader/twitter-x-downloader",
-          "params": [{"name":"url","required":true,"description":"Paste the media URL"}],
+          "params": [
+            {
+              "name": "url",
+              "required": true,
+              "description": "Paste the media URL"
+            }
+          ],
           "methods": [
             "GET"
           ],
@@ -644,7 +835,13 @@ module.exports = [
         "YouTube Downloader": {
           "desc": "TEDDY-TECH Downloader endpoint · JSON. Route and parameters require upstream verification.",
           "path": "/api/teddyai/downloader/youtube-downloader",
-          "params": [{"name":"url","required":true,"description":"Paste the media URL"}],
+          "params": [
+            {
+              "name": "url",
+              "required": true,
+              "description": "Paste the media URL"
+            }
+          ],
           "methods": [
             "GET"
           ],
@@ -656,7 +853,13 @@ module.exports = [
         "Universal Downloader": {
           "desc": "TEDDY-TECH Downloader endpoint · JSON. Route and parameters require upstream verification.",
           "path": "/api/teddyai/downloader/universal-downloader",
-          "params": [{"name":"url","required":true,"description":"Paste the media URL"}],
+          "params": [
+            {
+              "name": "url",
+              "required": true,
+              "description": "Paste the media URL"
+            }
+          ],
           "methods": [
             "GET"
           ],
