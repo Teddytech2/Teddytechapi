@@ -1,36 +1,98 @@
-# TEDDY-TECH API Console
+# TEDDY-TECH API
 
-A dark green/black TEDDY-TECH API explorer. The **only API source** is:
+A public, keyless API collection by **Teddy Tech**, with a refreshed documentation UI and media endpoints routed through Nexray (`https://api.nexray.eu.cc`).
 
-`https://media.cypherxbot.space/endpoints`
-
-The catalogue is fetched live by the server. The console builds categories from the source's published router definitions, platforms, plugin metadata, and supported media types. It does not maintain a local list of legacy providers or fabricate endpoint responses.
+## Features
+- **No API key required** for routes hosted by this project.
+- Searchable API directory with a live request tester and copyable endpoint URLs.
+- Existing media endpoints preserved.
+- Added YouTube and AudioMack search/download routes plus a universal social-media downloader.
+- `GET /health` reports basic service health.
+- CORS enabled for browser integrations.
+- Works as a Node.js/Express service and includes a Vercel configuration.
 
 ## Run locally
+Requires Node.js 18+.
 
 ```bash
 npm install
 npm start
 ```
 
-Open `http://localhost:5000`.
+The service listens on `PORT` or port `5000`. Open `/` for the documentation UI and `/endpoints` for the endpoint catalogue.
 
-## Vercel deployment
+## Added media routes
 
-1. Import this repository into Vercel.
-2. Keep the included `vercel.json`.
-3. Deploy using Node.js 18 or newer.
+All routes below require no API key. Query parameters must be URL-encoded.
 
-No provider API keys or legacy Shizo/Neosoft environment variables are required.
+| Method | Route | Required parameters |
+| --- | --- | --- |
+| GET | `/download/youtube/:mtype` | `url` |
+| GET | `/search/youtube` | `query` |
+| GET | `/download/audiomack/:mtype` | `url` |
+| GET | `/search/audiomack` | `query` |
+| GET | `/download/:platform/:media_type` | `url` |
 
-## Routes
+YouTube `mtype`: `audio`, `video`, `videohd`, `videofhd`, `video2k`, `video4k`.
 
-- `GET /endpoints` — live catalogue normalized for the website.
-- `GET /status` — console runtime status.
-- The source API routes (`/download`, `/search/:platform`, `/download/:platform/:media_type`, `/plugins`, `/health`) are proxied only when the live catalogue declares them.
+AudioMack `mtype`: `audio`, `video`.
 
-Upstream response status, content type, and streaming body are forwarded. Catalogue failures, missing parameters, unsupported platforms/media types, timeouts, and upstream errors are returned as errors rather than fake success responses.
+Universal downloader `platform`: `youtube`, `instagram`, `tiktok`, `facebook`, `twitter`, `audiomack`. `media_type`: `audio` or `video`.
 
-## Source limitation
+Search endpoints may accept `media_type` and `max_results` as optional parameters, according to the upstream service.
 
-The upstream catalogue is the authority. If it is unavailable or changes its structure, the console reports that the live catalogue could not be loaded; it does not fall back to stale endpoints.
+### Examples
+```text
+GET /download/youtube/audio?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DVIDEO_ID
+GET /search/youtube?query=lofi%20music
+GET /download/tiktok/video?url=https%3A%2F%2Fwww.tiktok.com%2F...
+GET /health
+GET /endpoints
+```
+
+## Important reliability notes
+- “No API key” means this project's routes do not ask callers for a key. It does **not** guarantee unlimited use, zero cost, or permanent uptime.
+- Existing endpoints and the added proxy rely on third-party sites/services. They may impose their own limits, block requests, change response formats, or be temporarily unavailable.
+- The new proxy uses a fixed upstream host; it does not let callers choose an arbitrary proxy destination.
+- Use responsibly and respect the source platforms' terms, copyright, and privacy rules. Do not use this service to bypass access controls or download content you do not have permission to access.
+- On a public deployment, consider adding host-level rate limiting to prevent abuse and protect your hosting quota.
+
+## Deployment
+Deploy as a standard Node.js service with `npm install` and `npm start`. Vercel settings are included in `vercel.json`. If a platform needs a different start command or root directory, configure it to the repository root.
+
+## Project identity
+- Name: TEDDY-TECH API
+- Maintainer: Teddy Tech
+- Repository: https://github.com/Teddyxmd/TEDDY-XMD
+
+
+
+## Nexray full category pass-through
+
+The external-provider integration is Nexray only. Requests are forwarded through `/api/nexray/` while retaining the upstream path, query parameters and request body. The documentation endpoint catalogue lists Nexray's published category groups. The public Nexray directory reports 373+ endpoints; its currently listed category counts are included in this project's catalogue, but individual endpoint paths and parameter schemas are not duplicated because the upstream documentation pages could not be fully retrieved during this update.
+
+| Nexray category | Listed endpoints | Proxy namespace |
+| --- | ---: | --- |
+| AI | 69 | `/api/nexray/ai/{endpoint}` |
+| Anime | 19 | `/api/nexray/anime/{endpoint}` |
+| Berita | 10 | `/api/nexray/berita/{endpoint}` |
+| Canvas | 9 | `/api/nexray/canvas/{endpoint}` |
+| Downloader | 42 | `/api/nexray/downloader/{endpoint}` |
+| Editor | 2 | `/api/nexray/editor/{endpoint}` |
+| Ephoto | 26 | `/api/nexray/ephoto/{endpoint}` |
+| Fun | 2 | `/api/nexray/fun/{endpoint}` |
+| Games | 8 | `/api/nexray/games/{endpoint}` |
+| Information | 10 | `/api/nexray/information/{endpoint}` |
+| Maker | 22 | `/api/nexray/maker/{endpoint}` |
+| Payment | 3 | `/api/nexray/payment/{endpoint}` |
+| Primbon | 10 | `/api/nexray/primbon/{endpoint}` |
+| Random | 10 | `/api/nexray/random/{endpoint}` |
+| Search | 33 | `/api/nexray/search/{endpoint}` |
+| Stalker | 15 | `/api/nexray/stalker/{endpoint}` |
+| Textpro | 22 | `/api/nexray/textpro/{endpoint}` |
+| Tools | 60 | `/api/nexray/tools/{endpoint}` |
+| Uploader | 1 | `/api/nexray/uploader/{endpoint}` |
+
+**Example:** upstream `GET /ai/gemini?text=Hello` is called through `GET /api/nexray/ai/gemini?text=Hello`. The upstream's documented method and parameters must be used.
+
+The catalogue category counts are informational and sourced from Nexray's category page; this update does not claim to have independently verified every individual route.
