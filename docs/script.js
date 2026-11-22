@@ -135,6 +135,13 @@
     methodSelect.innerHTML = item.methods.map(method => `<option value="${escapeHtml(method)}">${escapeHtml(method)}</option>`).join('');
     const fields = $('#parameter-fields');
     fields.innerHTML = '';
+    if (item.path.includes('{original-path}') || item.path.includes('{endpoint}')) {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'field';
+      const id = 'proxy-original-path';
+      wrapper.innerHTML = `<label for="${id}">Upstream endpoint path <em>Required</em></label><input id="${id}" name="_proxy_path" autocomplete="off" required placeholder="e.g. AI/gpt?query=hello">`;
+      fields.appendChild(wrapper);
+    }
     item.params.forEach(param => {
       const wrapper = document.createElement('div');
       wrapper.className = 'field';
@@ -144,7 +151,7 @@
     });
     // Every catalogue card gets a usable input, even while upstream parameter
     // metadata is unavailable. Choose a sensible parameter name from its group.
-    if (!item.params.length) {
+    if (!item.params.length && !fields.querySelector('input[name="_proxy_path"]')) {
       const wrapper = document.createElement('div');
       wrapper.className = 'field';
       const groupName = (item.groupName || '').toLowerCase();
@@ -170,8 +177,20 @@
   function buildRequest() {
     const item = state.active;
     const method = $('#request-method').value;
-    const url = new URL(item.path, location.origin);
+    let requestPath = item.path;
+    const proxyInput = $('#parameter-fields input[name="_proxy_path"]');
+    if (proxyInput) {
+      const upstreamPath = proxyInput.value.trim().replace(/^\/+/, '');
+      if (!upstreamPath || upstreamPath.includes('..') || /^https?:/i.test(upstreamPath)) throw new Error('Enter a valid upstream endpoint path');
+      requestPath = requestPath.replace(/\{(?:original-path|endpoint)\}/g, upstreamPath.split('?')[0]);
+    }
+    const url = new URL(requestPath, location.origin);
+    if (proxyInput?.value.includes('?')) {
+      const embedded = new URLSearchParams(proxyInput.value.split('?').slice(1).join('?'));
+      embedded.forEach((value, key) => url.searchParams.set(key, value));
+    }
     $('#parameter-fields').querySelectorAll('input').forEach(input => {
+      if (input.name === '_proxy_path') return;
       const value = input.value.trim();
       const param = item.params.find(entry => entry.name === input.name);
       if (value) url.searchParams.set(input.name, value);
@@ -259,11 +278,17 @@
     try {
       const request = buildRequest();
       const started = performance.now();
-      const response = await fetch(request.url.href, {
-        method: request.method,
-        headers: request.body ? { 'Content-Type': 'application/json' } : {},
-        body: request.body ? JSON.stringify(request.body) : undefined
-      });
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 45000);
+      let response;
+      try {
+        response = await fetch(request.url.href, {
+          method: request.method,
+          headers: request.body ? { 'Content-Type': 'application/json' } : {},
+          body: request.body ? JSON.stringify(request.body) : undefined,
+          signal: controller.signal
+        });
+      } finally { clearTimeout(timeout); }
       const elapsed = Math.round(performance.now() - started);
       const contentType = response.headers.get('content-type') || '';
       let output;
@@ -299,7 +324,7 @@
       $('#response-status').textContent = 'REQUEST ERROR';
       $('#response-time').textContent = '';
       showMedia([]);
-      $('#response-output').textContent = error.message;
+      $('#response-output').textContent = error.name === 'AbortError' ? 'Request timed out after 45 seconds.' : error.message;
       responsePanel.hidden = false;
     } finally {
       sendButton.disabled = false;
@@ -307,7 +332,20 @@
     }
   });
 
+  async function checkHealth() {
+    const pill = $('.status-pill');
+    const label = pill?.lastChild;
+    try {
+      const response = await fetch('/health', { cache: 'no-store' });
+      const health = await response.json();
+      const healthy = response.ok && health.status === true;
+      if (pill) { pill.style.color = healthy ? 'var(--green)' : '#ff9b9b'; pill.style.borderColor = healthy ? '#50d6a044' : '#ff777744'; pill.innerHTML = `<i></i> ${healthy ? 'OPERATIONAL' : 'DEGRADED'}`; }
+      if (label) label.textContent = healthy ? 'OPERATIONAL' : 'DEGRADED';
+    } catch { if (pill) { pill.style.color = '#ff9b9b'; pill.innerHTML = '<i></i> UNAVAILABLE'; } }
+  }
+
   loadCatalogue();
+  checkHealth();
   // Re-sync periodically so newly published upstream routes do not disappear from a stale page.
-  setInterval(() => loadCatalogue(), 120000);
+  setInterval(() => { loadCatalogue(); checkHealth(); }, 120000);
 })();
