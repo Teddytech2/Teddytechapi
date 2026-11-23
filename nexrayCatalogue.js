@@ -46,6 +46,10 @@ function inputHints(category, route) {
   if (category === 'Downloader') return { inputMode: 'params', params: [{ name: 'url', required: true, description: 'Media URL to download' }] };
   if (category === 'Search') return { inputMode: 'params', params: [{ name: 'query', required: true, description: 'Search keywords' }] };
   if (category === 'AI') {
+    // NexRay /ai/chatgpt explicitly validates the `text` field.
+    if (route === 'chatgpt') {
+      return { inputMode: 'params', params: [{ name: 'text', required: true, description: 'Text message to send to ChatGPT' }] };
+    }
     const key = /image-to-prompt|deepimg|gptimage|ideogram|magicstudio|nano-banana|text-to-image|writecream-image|flux|veo|suno/.test(route) ? 'prompt' : 'prompt';
     return { inputMode: 'params', params: [{ name: key, required: true, description: 'Prompt or text for this AI endpoint' }] };
   }
