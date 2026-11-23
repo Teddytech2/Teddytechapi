@@ -42,6 +42,7 @@
           desc: value.desc || value.description || '',
           path: path.split('?')[0],
           params: params.map(param => ({ name: safeText(param.name || param.key), required: param.required !== false, description: param.description || '' })).filter(param => param.name),
+          inputMode: safeText(value.inputMode || (params.length ? 'params' : 'flexible')),
           methods: Array.isArray(value.methods) ? value.methods : [value.method || 'GET'],
           provider: value.provider || 'TEDDY-TECH'
         };
@@ -149,20 +150,12 @@
       wrapper.innerHTML = `<label for="${id}">${escapeHtml(param.name)} ${param.required ? '<em>Required</em>' : '<em>Optional</em>'}</label><input id="${id}" name="${escapeHtml(param.name)}" autocomplete="off" placeholder="${escapeHtml(param.description || (param.required ? `Enter ${param.name}` : 'Leave blank if not needed'))}" ${param.required ? 'required' : ''}>`;
       fields.appendChild(wrapper);
     });
-    // Every catalogue card gets a usable input, even while upstream parameter
-    // metadata is unavailable. Choose a sensible parameter name from its group.
-    if (!item.params.length && !fields.querySelector('input[name="_proxy_path"]')) {
+    // Only show fields when the endpoint metadata indicates that input is
+    // expected. No-input routes stay clean and can be tested with one tap.
+    if (!item.params.length && item.inputMode === 'flexible') {
       const wrapper = document.createElement('div');
       wrapper.className = 'field';
-      const groupName = (item.groupName || '').toLowerCase();
-      const itemName = item.name.toLowerCase();
-      const isDownloader = groupName.includes('downloader') || /download/.test(itemName);
-      const isAi = groupName.includes('ai') || /chatgpt|dall|image/.test(itemName);
-      const isImage = /image|screenshot|background|fanart|waifu|neko|husby|shota|annie|mikasa|nami|sakura|sasha|vivi|pies/.test(itemName) || ['fanart','sfw','pies'].some(x => groupName.includes(x));
-      const paramName = isDownloader || isImage ? 'url' : (isAi ? 'prompt' : 'text');
-      const label = paramName === 'url' ? 'Image or video URL' : (paramName === 'prompt' ? 'Prompt' : 'Input');
-      const id = `generic-${Math.random().toString(36).slice(2)}`;
-      wrapper.innerHTML = `<label for="${id}">${label} <em>Input</em></label><input id="${id}" name="${paramName}" autocomplete="off" placeholder="${paramName === 'url' ? 'Paste a URL here' : 'Enter your prompt or text here'}">`;
+      wrapper.innerHTML = '<label>Optional query parameters or JSON body <em>Optional</em></label><p class="field-hint">This endpoint has no verified required fields. Leave blank to try it directly, or add the parameters listed by the provider.</p>';
       fields.appendChild(wrapper);
     }
     $('#response-panel').hidden = true;
