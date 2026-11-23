@@ -96,3 +96,17 @@ The external-provider integration is Nexray only. Requests are forwarded through
 **Example:** upstream `GET /ai/gemini?text=Hello` is called through `GET /api/nexray/ai/gemini?text=Hello`. The upstream's documented method and parameters must be used.
 
 The catalogue category counts are informational and sourced from Nexray's category page; this update does not claim to have independently verified every individual route.
+
+## NexRay API proxy
+
+The complete NexRay route catalogue is served from `/endpoints`. Calls are proxied transparently through `/api/nexray/<original-upstream-path>`.
+
+Examples:
+
+- `GET /api/nexray/ai/gemini?prompt=Hello`
+- `GET /api/nexray/downloader/tiktok?url=<video-url>`
+- `GET /api/nexray/search/youtube?query=<search-term>`
+- `GET /api/nexray/stalker/instagram?username=<username>`
+- `POST /api/nexray/upload` (send the upstream-required multipart or JSON body)
+
+The query/body parameter names above are illustrative only; use the parameter names required by each NexRay endpoint. The proxy does not guess or rewrite upstream parameters.

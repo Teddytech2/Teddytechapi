@@ -110,26 +110,11 @@ logger.info('Starting server initialization...');
 logger.info('Loading API endpoints...');
 const allEndpoints = loadEndpointsFromDirectory('api');
 
-// Register Nexray as the single external provider namespace.
+// Register NexRay pass-through and the complete supplied endpoint catalogue.
 require('./nexrayProxy').register(app);
-// Nexray's public catalogue is organized into these categories. The proxy is path-transparent,
-// so individual upstream endpoints can be called through /api/nexray/<original-path>.
-const nexrayCategories = [
-    ['AI', 69], ['Anime', 19], ['Berita', 10], ['Canvas', 9], ['Downloader', 42],
-    ['Editor', 2], ['Ephoto', 26], ['Fun', 2], ['Games', 8], ['Information', 10],
-    ['Maker', 22], ['Payment', 3], ['Primbon', 10], ['Random', 10], ['Search', 33],
-    ['Stalker', 15], ['Textpro', 22], ['Tools', 60], ['Uploader', 1]
-];
-allEndpoints.push({
-    name: 'Nexray · API',
-    items: [
-        { 'Nexray Pass-through': { desc: 'Transparent forwarding to Nexray. Use the original Nexray path, method, query and request body.', path: '/api/nexray/{original-path}' } },
-        ...nexrayCategories.map(([category, count]) => ({ [category]: {
-            desc: `Nexray ${category} category (${count} upstream endpoints reported in its directory). Call original paths through this proxy namespace.`,
-            path: `/api/nexray/${category.toLowerCase()}/{endpoint}`
-        }}))
-    ]
-});
+const nexrayGroups = require('./nexrayCatalogue').getNexrayGroups();
+allEndpoints.push(...nexrayGroups);
+
 allEndpoints.push({
     name: 'Media Provider',
     items: [
